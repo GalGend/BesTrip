@@ -14,8 +14,12 @@ var saveNewUser=function(){
     var us = new User({name:"Gal Gendler"})
     us.save(function(data){
         var i=data;
+        // comment
+        var i="slack test";
     }, function(err){
         var i=err;
+
+
     });
 }();
 module.exports={
