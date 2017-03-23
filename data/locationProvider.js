@@ -27,7 +27,6 @@ var locations = [{
 module.exports.getLocations = function(searcText){
 
 	var filterFunc = function(loc){
-		console.log(loc.locationName);
 		return loc.locationName.indexOf(searcText) !== -1;
 	}
 

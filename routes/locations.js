@@ -6,7 +6,7 @@ var locationProvider = require('../data/locationProvider')
 router.get('/:text', function(req, res, next) {
 	var text = req.param('text'); 
 	if (typeof text === undefined)
-		res.status(400).send('text not found'); 
+		res.status(400).send({error:'text not found'}); 
 	else{
 		var locations = locationProvider.getLocations(text); 
 	 	res.send(locations);
