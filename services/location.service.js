@@ -1,36 +1,60 @@
 var _ = require('underscore');
-
-var locations = [{
-		locationName:'Kiryat Ono',
-		locationID:'1'
-	}, {
-		locationName:'Ganei Tikva',
-		locationID:'2'
-	}, {
-		locationName:'Ashdod',
-		locationID:'3'
-	}, {
-		locationName:'Netanya',
-		locationID:'4'
-	}, {
-		locationName:'New York',
-		locationID:'5'
-	}, {
-		locationName:'London',
-		locationID:'6'
-	}, {
-		locationName:'Tel Aviv',
-		locationID:'7'
-	}]; 
+var Request = require('request-promise');
 
 
-module.exports.getLocations = function(searcText){
+var getCitiesAutoComplete = function(searcText){
+	// Generating the request to the google api
+	var uri = _generateCityAutocompleteRequest(searcText);
+	return Request({
+		uri:uri,
+		json:true
+	})
+	.then(function(data){
+		return  _.map(data.predictions, _mapCityAutoComplete);
+	})
+	.catch(function(err){
+		console.log(err);
+	})
+}
 
-	var filterFunc = function(loc){
-		return loc.locationName.indexOf(searcText) !== -1;
+module.exports={
+	getCitiesAutoComplete:getCitiesAutoComplete
+}
+
+var _generateCityAutocompleteRequest = function(searcText){
+	// Taking the api address,
+	var params = {
+		'input':searcText,
+		'types':'(cities)'
+	};
+	
+	var req = _generateGoogleApiReq(params);
+	
+	return req;
+
+}
+
+
+var _generateGoogleApiReq = function(params){
+
+	// TODO: Check that the variable exist
+	// otherwise, return internal server error
+	var req = process.env.GGL_CITIES_API_ADDR;
+	req+='?';
+	req+='key='+process.env.GGL_API_KEY;
+
+	for(var key in params){
+		req+='&'+key+'='+params[key];
 	}
 
-	var filteredLocs = _.filter(locations, filterFunc);
-	return filteredLocs;
-	
+	return req;
+}
+
+var _mapCityAutoComplete = function(city){
+	return {
+		id:city.id,
+		placeId:city.place_id, 
+		mainText:city.structured_formatting.main_text,
+		secondaryText:city.structured_formatting.secondary_text
+	}
 }
