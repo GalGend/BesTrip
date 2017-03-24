@@ -45,10 +45,10 @@ This project won't run if you don't use the following env vars:
 
 ### Links
 
-Dillinger is currently extended with the following plugins. Instructions on how to use them in your own application are linked below.
+Here are some of our common links
 
 | Plugin | README |
 | ------ | ------ |
-| Github | [https://github.com/GalGend/BesTrip] |
-| Google Drive | https://drive.google.com/drive/u/0/folders/0BxlQ5nNEKtBRTWJQbFJjLTZUbFk [PlGd] |
-| DB Server | https://mlab.com/databases/bestrip [PlOd] |
+| Github | https://github.com/GalGend/BesTrip |
+| Google Drive | https://drive.google.com/drive/u/0/folders/0BxlQ5nNEKtBRTWJQbFJjLTZUbFk |
+| DB Server | https://mlab.com/databases/bestrip  |
