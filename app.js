@@ -5,21 +5,21 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users.router');
-var locations = require('./routes/locations.router');
-//var tripPlaner = require('.routes/tripPlanner');
-
 var app = express();
 
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
+//app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var index = require('./routes/index');
+var users = require('./routes/users.router');
+var locations = require('./routes/locations.router');
 
 app.use('/', index);
 app.use('/users', users);
@@ -41,5 +41,9 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
 });
+
+app.listen(5858, function () {
+  console.log('Example app listening on port 5858!')
+})
 
 module.exports = app;
