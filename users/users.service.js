@@ -1,4 +1,4 @@
-var User = require('./dataAccess/dbAccess').models.users;
+var User = require('../common/db-access').models.users;
 
 var getUserById=function(mongoId){
     return User.findById(mongoId)
@@ -25,11 +25,7 @@ var saveNewUser=function(userName, fbId){
         fbId:fbId});
 
      return us.save()
-    .then(function(data){
-        console.log('added the user')
-    }, function(err){
-        console.debug('could not add the user')
-   });
+    
 };
 
 var getUserTrips= function(userId){

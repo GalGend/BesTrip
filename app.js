@@ -17,11 +17,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var index = require('./routes/index');
-var users = require('./routes/users.router');
-var locations = require('./routes/locations.router');
+//var index = require('./routes/index');
+var users = require('./users/users.router');
+var locations = require('./locations/locations.router');
 
-app.use('/', index);
+//app.use('/', index);
 app.use('/users', users);
 app.use('/locations', locations); 
 
