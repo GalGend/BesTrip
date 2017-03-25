@@ -10,7 +10,6 @@ var getCitiesAutoComplete = function(searcText){
 		json:true
 	})
 	.then(function(data){
-		//return  _.map(data.predictions, _mapCityAutoComplete);
 		return data.predictions.map((city)=>{ return {
 				id:city.id,
 				placeId:city.place_id, 
@@ -37,9 +36,9 @@ var _generateCityAutocompleteRequest = function(searcText){
 
 
 var _generateGoogleApiReq = function(params){
-
-	// TODO: Check that the variable exist
-	// otherwise, return internal server error
+	if(process.env.GGL_CITIES_API_ADDR== undefined || process.env.GGL_API_KEY== undefined)
+		throw "environment variables were'nt found"
+		
 	var req = process.env.GGL_CITIES_API_ADDR;
 	req+='?';
 	params.key = process.env.GGL_API_KEY;
