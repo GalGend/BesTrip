@@ -10,7 +10,13 @@ var getCitiesAutoComplete = function(searcText){
 		json:true
 	})
 	.then(function(data){
-		return  _.map(data.predictions, _mapCityAutoComplete);
+		return data.predictions.map((city)=>{ return {
+				id:city.id,
+				placeId:city.place_id, 
+				mainText:city.structured_formatting.main_text,
+				secondaryText:city.structured_formatting.secondary_text
+			}
+		})
 	})
 	.catch(function(err){
 		console.log(err);
@@ -22,39 +28,24 @@ module.exports={
 }
 
 var _generateCityAutocompleteRequest = function(searcText){
-	// Taking the api address,
-	var params = {
+	return _generateGoogleApiReq({
 		'input':searcText,
 		'types':'(cities)'
-	};
-	
-	var req = _generateGoogleApiReq(params);
-	
-	return req;
-
+	});
 }
 
 
 var _generateGoogleApiReq = function(params){
-
-	// TODO: Check that the variable exist
-	// otherwise, return internal server error
+	if(process.env.GGL_CITIES_API_ADDR== undefined || process.env.GGL_API_KEY== undefined)
+		throw "environment variables were'nt found"
+		
 	var req = process.env.GGL_CITIES_API_ADDR;
 	req+='?';
-	req+='key='+process.env.GGL_API_KEY;
+	params.key = process.env.GGL_API_KEY;
 
-	for(var key in params){
-		req+='&'+key+'='+params[key];
-	}
+	Object.keys(params).forEach((key) => {
+   		 req+='&'+key+'='+params[key];    
+	});
 
 	return req;
-}
-
-var _mapCityAutoComplete = function(city){
-	return {
-		id:city.id,
-		placeId:city.place_id, 
-		mainText:city.structured_formatting.main_text,
-		secondaryText:city.structured_formatting.secondary_text
-	}
 }
