@@ -3,13 +3,18 @@ var router = express.Router();
 var locationProvider = require('../services/location.service')
 
 /* GET users listing. */
-router.get('/:text', function(req, res, next) {
+router.get('/autocomplete/:text', function(req, res, next) {
 	var text = req.param('text'); 
 	if (typeof text === undefined)
 		res.status(400).send({error:'text not found'}); 
 	else{
-		var locations = locationProvider.getLocations(text); 
-	 	res.send(locations);
+		locationProvider.getCitiesAutoComplete(text)
+		.then(function(data){
+			res.status(200).json(data);
+		})
+		.catch(function(err){
+			res.status(500).send({error:'Error getting city autocomplete'});
+		})
 	}
 });
 
