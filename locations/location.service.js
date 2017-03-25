@@ -10,7 +10,14 @@ var getCitiesAutoComplete = function(searcText){
 		json:true
 	})
 	.then(function(data){
-		return  _.map(data.predictions, _mapCityAutoComplete);
+		//return  _.map(data.predictions, _mapCityAutoComplete);
+		return data.predictions.map((city)=>{ return {
+				id:city.id,
+				placeId:city.place_id, 
+				mainText:city.structured_formatting.main_text,
+				secondaryText:city.structured_formatting.secondary_text
+			}
+		})
 	})
 	.catch(function(err){
 		console.log(err);
@@ -22,16 +29,10 @@ module.exports={
 }
 
 var _generateCityAutocompleteRequest = function(searcText){
-	// Taking the api address,
-	var params = {
+	return _generateGoogleApiReq({
 		'input':searcText,
 		'types':'(cities)'
-	};
-	
-	var req = _generateGoogleApiReq(params);
-	
-	return req;
-
+	});
 }
 
 
@@ -41,20 +42,11 @@ var _generateGoogleApiReq = function(params){
 	// otherwise, return internal server error
 	var req = process.env.GGL_CITIES_API_ADDR;
 	req+='?';
-	req+='key='+process.env.GGL_API_KEY;
+	params.key = process.env.GGL_API_KEY;
 
-	for(var key in params){
-		req+='&'+key+'='+params[key];
-	}
+	Object.keys(params).forEach((key) => {
+   		 req+='&'+key+'='+params[key];    
+	});
 
 	return req;
-}
-
-var _mapCityAutoComplete = function(city){
-	return {
-		id:city.id,
-		placeId:city.place_id, 
-		mainText:city.structured_formatting.main_text,
-		secondaryText:city.structured_formatting.secondary_text
-	}
 }
