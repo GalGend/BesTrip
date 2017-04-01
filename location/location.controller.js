@@ -9,7 +9,6 @@ let autocompleteCities=(req, res)=>{
 
 	else{
 		try{
-			console.log('Autocomplete request in try');
 		locationsService.getCitiesAutoComplete(text)
 		.then(baseController.createDataHandler(res))
 		.catch(baseController.createErrorHandler(res, "Cities autocomplete error"))
@@ -17,6 +16,7 @@ let autocompleteCities=(req, res)=>{
 		catch(error){
 			console.log("Internal error perforing the auto complete request")
 			console.log(error);
+			baseController.createErrorHandler(res, "Cities autocomplete error")(error);
 		}
 	}
 }

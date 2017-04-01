@@ -5,7 +5,6 @@ var Request = require('request-promise');
 var getCitiesAutoComplete = function(searcText){
 	// Generating the request to the google api
 	var uri = _generateCityAutocompleteRequest(searcText);
-	console.log('autocomplete request' + searcText);
 	return Request({
 		uri:uri,
 		json:true
@@ -21,6 +20,7 @@ var getCitiesAutoComplete = function(searcText){
 	})
 	.catch(function(err){
 		console.log("Error performing request to google "+err);
+		throw "Error performing request to google "+err;
 	})
 }
 
