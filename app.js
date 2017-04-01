@@ -18,12 +18,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //var index = require('./routes/index');
-var users = require('./users/users.router');
-var locations = require('./locations/locations.router');
+var users = require('./user/user.router');
+var locations = require('./location/location.router');
+var trips = require('./trip/trip.router');
+var tripPrefences = require('./trip-prefences/trip-prefences.router');
 
 //app.use('/', index);
-app.use('/users', users);
-app.use('/locations', locations); 
+app.use('/user', users);
+app.use('/location', locations); 
+app.use('/trip', trips); 
+app.use('/trip-prefences', tripPrefences); 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,7 +47,9 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(5858, function () {
-  console.log('Example app listening on port 5858!')
+  console.log('Example app listening on port 3000!')
+  // Setting the env var
+  process.env.MONGO_CONN_STR =   "mongodb://admin:admin@ds137530.mlab.com:37530/bestrip";
 })
 
 module.exports = app;
