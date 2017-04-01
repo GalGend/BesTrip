@@ -21,7 +21,8 @@ let autocompleteCities=(res, req)=>{
 }
 
 let test = (res, req)=>{
-	res.status(200).json({res:"Suc"})
+	console.log('test');
+	res.status(200).json({test:"test"});
 }
 
 module.exports = {

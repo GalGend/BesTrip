@@ -5,6 +5,7 @@ var Request = require('request-promise');
 var getCitiesAutoComplete = function(searcText){
 	// Generating the request to the google api
 	var uri = _generateCityAutocompleteRequest(searcText);
+	console.log('autocomplete request');
 	return Request({
 		uri:uri,
 		json:true
@@ -36,9 +37,10 @@ var _generateCityAutocompleteRequest = function(searcText){
 
 
 var _generateGoogleApiReq = function(params){
-	if(process.env.GGL_CITIES_API_ADDR== undefined || process.env.GGL_API_KEY== undefined)
+	if(process.env.GGL_CITIES_API_ADDR== undefined || process.env.GGL_API_KEY== undefined){
+		console.error("env vars werent found");
 		throw "environment variables were'nt found"
-		
+	}
 	var req = process.env.GGL_CITIES_API_ADDR;
 	req+='?';
 	params.key = process.env.GGL_API_KEY;
