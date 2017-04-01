@@ -1,16 +1,16 @@
 var locationsService = require('./location.service');
 var baseController = require('../common/base.controller')
 
-let autocompleteCities=(res, req)=>{
+let autocompleteCities=(req, res)=>{
 	console.log('Autocomplete request ');
     var text = req.param('text'); 
 	if (typeof text === undefined)
-    baseController.handleBadRequestError("autocomplete search text wasn't found")
+    	baseController.handleBadRequestError("autocomplete search text wasn't found")
 
 	else{
 		try{
 			console.log('Autocomplete request in try');
-		locationProvider.getCitiesAutoComplete(text)
+		locationsService.getCitiesAutoComplete(text)
 		.then(baseController.createDataHandler(res))
 		.catch(baseController.createErrorHandler(res, "Cities autocomplete error"))
 		}
@@ -21,12 +21,6 @@ let autocompleteCities=(res, req)=>{
 	}
 }
 
-let test = (res, req)=>{
-	console.log('test');
-	res.status(200).json({test:"test"});
-}
-
 module.exports = {
     autocompleteCities:autocompleteCities,
-	test:test
 }
