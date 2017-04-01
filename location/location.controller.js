@@ -20,6 +20,11 @@ let autocompleteCities=(res, req)=>{
 	}
 }
 
+let test = (res, req)=>{
+	res.status(200).json({res:"Suc"})
+}
+
 module.exports = {
-    autocompleteCities:autocompleteCities
+    autocompleteCities:autocompleteCities,
+	test:test
 }
