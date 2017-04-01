@@ -1,4 +1,4 @@
-var userService = require('./users.service');
+var userService = require('./user.service');
 var baseController = require('../common/base.controller');
 
 var getUserById = function(req, res){
