@@ -9,6 +9,7 @@ let autocompleteCities=(res, req)=>{
 
 	else{
 		try{
+			console.log('Autocomplete request in try');
 		locationProvider.getCitiesAutoComplete(text)
 		.then(baseController.createDataHandler(res))
 		.catch(baseController.createErrorHandler(res, "Cities autocomplete error"))
