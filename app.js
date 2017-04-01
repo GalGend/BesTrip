@@ -47,9 +47,21 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(5858, function () {
-  console.log('Example app listening on port 3000!')
+  console.log('-----------------------------------------')
+  console.log('--------BesTrip Server is now up---------')
+  console.log('-----------------------------------------')
   // Setting the env var
-  process.env.MONGO_CONN_STR =   "mongodb://admin:admin@ds137530.mlab.com:37530/bestrip";
+  // Checking the env vars
+  if(process.env.MONGO_CONN_STR === undefined ||
+  process.env.GGL_CITIES_API_ADDR === undefined ||
+  process.env.GGL_API_KEY === undefined )
+  {
+    console.log ("env vars are missing!");
+    process.env.MONGO_CONN_STR =   "mongodb://admin:admin@ds137530.mlab.com:37530/bestrip";
+    process.env.GGL_CITIES_API_ADDR ="https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    process.env.GGL_API_KEY = "AIzaSyCZfV1JbQ6R4URxw3XPQAMyQrGhfNUoTTw";
+  }
+  //process.env.
 })
 
 module.exports = app;
