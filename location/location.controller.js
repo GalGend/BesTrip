@@ -8,9 +8,15 @@ let autocompleteCities=(res, req)=>{
     baseController.handleBadRequestError("autocomplete search text wasn't found")
 
 	else{
+		try{
 		locationProvider.getCitiesAutoComplete(text)
 		.then(baseController.createDataHandler(res))
 		.catch(baseController.createErrorHandler(res, "Cities autocomplete error"))
+		}
+		catch(error){
+			console.log("Internal error perforing the auto complete request")
+			console.log(error);
+		}
 	}
 }
 

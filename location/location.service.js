@@ -19,7 +19,7 @@ var getCitiesAutoComplete = function(searcText){
 		})
 	})
 	.catch(function(err){
-		console.log(err);
+		console.log("Error performing request to google "+err);
 	})
 }
 
