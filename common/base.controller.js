@@ -25,7 +25,7 @@ let createErrorHandler = (res, message)=>{
 
 let createDataHandler = (res)=>{
     return (data)=>{
-        console.log(data);
+       // console.log(data);
        res.status(200).json(data);
     }
 }
