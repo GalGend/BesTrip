@@ -10,8 +10,6 @@ var places = new GooglePlaces(process.env.GGL_API_KEY)
 var util = require('util');
 
 let getCitySitesByCategory = function(cityId, categoryId){
-//	cityId = "ChIJc2nSALkEdkgRkuoJJBfzkUI";
-//	categoryId = "58e7b6e065002073b1d0aae0";
 
 	return Promise.props({
 			cityData: _getSiteDataById(cityId), 
@@ -23,7 +21,6 @@ let getCitySitesByCategory = function(cityId, categoryId){
 						result.cityData.result.geometry.location.lng]
 			var query = result.siteCategory[0]._doc.googleQuery;
 			
-			//console.log(result.cityData, result.siteCategory);
 			return searchSitesByQuery(query, coords);
 		}
 		catch(err){
@@ -117,6 +114,15 @@ let _mapSites = (site)=>{
 		name:site.name,
 		placeId:site.place_id,
 		rating:site.rating
+	}
+}
+
+var _mapCity = (city) =>{
+	return {
+		id:city.id,
+		placeId:city.place_id, 
+		mainText:city.structured_formatting.main_text,
+		secondaryText:city.structured_formatting.secondary_text
 	}
 }
 
