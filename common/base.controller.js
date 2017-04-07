@@ -18,12 +18,14 @@ let handleInternalError = function(res, message, err){
 
 let createErrorHandler = (res, message)=>{
     return (err)=>{
+        console.error(err);
         handleError(res, message ,err)
     }
 }
 
 let createDataHandler = (res)=>{
     return (data)=>{
+        console.log(data);
        res.status(200).json(data);
     }
 }

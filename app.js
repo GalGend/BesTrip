@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var cors = require('cors');
 var app = express();
 
 
@@ -16,6 +16,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+
 
 //var index = require('./routes/index');
 var users = require('./user/user.router');
@@ -46,6 +48,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
 });
 
+
 app.listen(5858, function () {
   console.log('-----------------------------------------')
   console.log('--------BesTrip Server is now up---------')
@@ -60,6 +63,7 @@ app.listen(5858, function () {
     process.env.MONGO_CONN_STR =   "mongodb://admin:admin@ds137530.mlab.com:37530/bestrip";
     process.env.GGL_CITIES_API_ADDR ="https://maps.googleapis.com/maps/api/place/autocomplete/json";
     process.env.GGL_API_KEY = "AIzaSyCZfV1JbQ6R4URxw3XPQAMyQrGhfNUoTTw";
+    process.env.GGL_SITES_API_ADDR = "https://maps.googleapis.com/maps/api/place/details/json"
   }
   //process.env.
 })

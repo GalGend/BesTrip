@@ -1,5 +1,6 @@
 var locationsService = require('./location.service');
 var baseController = require('../common/base.controller')
+var _ = require('underscore');
 
 let autocompleteCities=(req, res)=>{
 	console.log('Autocomplete request ');
@@ -14,13 +15,47 @@ let autocompleteCities=(req, res)=>{
 		.catch(baseController.createErrorHandler(res, "Cities autocomplete error"))
 		}
 		catch(error){
-			console.log("Internal error perforing the auto complete request")
-			console.log(error);
 			baseController.createErrorHandler(res, "Cities autocomplete error")(error);
 		}
 	}
 }
 
+let getAllSiteCategories=(req, res)=>{
+	console.log('site categories request');
+	try{
+		locationsService.getAllSiteCategories()
+		.then(baseController.createDataHandler(res))
+		.catch(baseController.createErrorHandler(res, "site categories error"))
+	}
+	catch(error){
+			baseController.createErrorHandler(res, "site categories error")(error);
+	}
+}
+
+let getCitySitesByCategory = (req, res) =>{
+	try{
+		var cityId = req.query.cityId;
+		var categoryId = req.query.categoryId;
+		if (_.isUndefined(cityId)|| _.isUndefined(categoryId)){
+			baseController.handleBadRequestError("city sites by categories bad params")
+		}
+	}
+	catch(err){
+		baseController.handleBadRequestError("city sites by categories bad params")
+	}
+	try{
+		locationsService.getCitySitesByCategory(cityId, categoryId)
+		.then(baseController.createDataHandler(res))
+		.catch(baseController.createErrorHandler(res, "City sites by category error"))
+	}
+	catch(error){
+			baseController.createErrorHandler(res, "city sites by category error")(error);
+	
+	}
+}
+
 module.exports = {
     autocompleteCities:autocompleteCities,
+	getAllSiteCategories:getAllSiteCategories,
+	getCitySitesByCategory:getCitySitesByCategory
 }

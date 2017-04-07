@@ -21,8 +21,14 @@ var tripSchema = new mongo.Schema({
   perfences:[]
 }); 
 
+var siteCategory = new mongo.Schema({
+  name:String,
+  googleQuery:String
+})
+
 module.exports={
     models:{
-        users: mongo.model('User', userSchema)
+        users: mongo.model('User', userSchema),
+        siteCategory:mongo.model('SiteCategory', siteCategory)
     }
 }
