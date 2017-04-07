@@ -63,6 +63,7 @@ app.listen(5858, function () {
     process.env.MONGO_CONN_STR =   "mongodb://admin:admin@ds137530.mlab.com:37530/bestrip";
     process.env.GGL_CITIES_API_ADDR ="https://maps.googleapis.com/maps/api/place/autocomplete/json";
     process.env.GGL_API_KEY = "AIzaSyCZfV1JbQ6R4URxw3XPQAMyQrGhfNUoTTw";
+    process.env.GGL_SITES_API_ADDR = "https://maps.googleapis.com/maps/api/place/details/json"
   }
   //process.env.
 })
