@@ -54,8 +54,24 @@ let getCitySitesByCategory = (req, res) =>{
 	}
 }
 
+let getSiteById = (req, res)=>{
+	// Checking parameter
+	var siteId= req.params.siteId;
+
+	try{
+		locationsService.getSiteById(siteId)
+		.then(baseController.createDataHandler(res))
+		.catch(baseController.createErrorHandler(res, "Get Site By Id error"))
+	}
+	catch(error){
+			baseController.createErrorHandler(res, "Get site By id error")(error);
+	
+	}
+}
+
 module.exports = {
     autocompleteCities:autocompleteCities,
 	getAllSiteCategories:getAllSiteCategories,
-	getCitySitesByCategory:getCitySitesByCategory
+	getCitySitesByCategory:getCitySitesByCategory,
+	getSiteById:getSiteById
 }

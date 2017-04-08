@@ -57,6 +57,7 @@ app.listen(5858, function () {
   // Checking the env vars
   if(process.env.MONGO_CONN_STR === undefined ||
   process.env.GGL_CITIES_API_ADDR === undefined ||
+  process.env.GGL_SITES_API_ADDR === undefined ||
   process.env.GGL_API_KEY === undefined )
   {
     console.log ("env vars are missing!");
@@ -65,7 +66,6 @@ app.listen(5858, function () {
     process.env.GGL_API_KEY = "AIzaSyCZfV1JbQ6R4URxw3XPQAMyQrGhfNUoTTw";
     process.env.GGL_SITES_API_ADDR = "https://maps.googleapis.com/maps/api/place/details/json"
   }
-  //process.env.
 })
 
 module.exports = app;
