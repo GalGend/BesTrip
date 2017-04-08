@@ -5,8 +5,6 @@ var SiteCategory = require("../common/db-access").models.siteCategory;
 
 var GooglePlaces = require('google-places');
 var places = new GooglePlaces(process.env.GGL_API_KEY)
-
-
 var util = require('util');
 
 let getCitySitesByCategory = function(cityId, categoryId){
@@ -24,8 +22,8 @@ let getCitySitesByCategory = function(cityId, categoryId){
 			return searchSitesByQuery(query, coords);
 		}
 		catch(err){
-			console.error("Error performing getting sites by city and category id")
-			throw "Error performing getting sites by city and category id";
+			console.error("Error performing getting sites by city and category id: " +err)
+			throw "Error performing getting sites by city and category id: " + err;
 		}
 		});
 
@@ -64,24 +62,12 @@ var getCitiesAutoComplete = function(searcText){
 		json:true
 	})
 	.then(function(data){
-		return data.predictions.map((city)=>{ return {
-				id:city.id,
-				placeId:city.place_id, 
-				mainText:city.structured_formatting.main_text,
-				secondaryText:city.structured_formatting.secondary_text
-			}
-		})
+		return data.predictions.map(_mapCity)
 	})
 	.catch(function(err){
 		console.log("Error performing autocomplete request to google "+err);
 		throw "Error performing autocomplete request to google "+err;
 	})
-}
-
-module.exports={
-	getCitiesAutoComplete:getCitiesAutoComplete,
-	getAllSiteCategories:getAllSiteCategories,
-	getCitySitesByCategory:getCitySitesByCategory
 }
 
 var _generateCityAutocompleteRequest = function(searcText){
@@ -90,8 +76,6 @@ var _generateCityAutocompleteRequest = function(searcText){
 		'types':'(cities)'
 	});
 }
-
-
 
 var _generateGoogleApiReq = function(baseAddr,params){
 	if( process.env.GGL_API_KEY== undefined){
@@ -132,5 +116,22 @@ var _getSiteDataById = (siteId)=>{
 		uri:uri,
 		json:true
 	})
+}
+var getSiteDataById = (siteId)=>{
+	return _getSiteDataById(siteId).then((data)=>{
+		return {
+			placeId:data.result.place_id,
+			name:data.result.name,
+			photos:data.result.photos
+
+		}
+	})
+}
+
+module.exports={
+	getCitiesAutoComplete:getCitiesAutoComplete,
+	getAllSiteCategories:getAllSiteCategories,
+	getCitySitesByCategory:getCitySitesByCategory,
+	getSiteById:getSiteDataById
 }
 	
