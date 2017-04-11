@@ -23,7 +23,8 @@ var tripSchema = new mongo.Schema({
 
 var siteCategory = new mongo.Schema({
   name:String,
-  googleQuery:String
+  googleQuery:String, 
+  foursquareQuery:String
 })
 
 module.exports={

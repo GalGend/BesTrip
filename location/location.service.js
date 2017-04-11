@@ -5,7 +5,10 @@ var SiteCategory = require("../common/db-access").models.siteCategory;
 
 var GooglePlaces = require('google-places');
 var places = new GooglePlaces(process.env.GGL_API_KEY)
+var foursquare = Promise.promisifyAll(require('node-foursquare-venues')(process.env.FRSQR_CLIENT_ID, process.env.FRSQR_CLIENT_SCRT))
+
 var util = require('util');
+
 
 let getCitySitesByCategory = function(cityId, categoryId){
 
@@ -17,7 +20,7 @@ let getCitySitesByCategory = function(cityId, categoryId){
 			try{
 			var coords = [result.cityData.result.geometry.location.lat,
 						result.cityData.result.geometry.location.lng]
-			var query = result.siteCategory[0]._doc.googleQuery;
+			var query = result.siteCategory[0]._doc.foursquareQuery;
 			
 			return searchSitesByQuery(query, coords);
 		}
@@ -30,20 +33,16 @@ let getCitySitesByCategory = function(cityId, categoryId){
 	return searchSitesByQuery(query, location)
 }
 let searchSitesByQuery=(query, location)=>{
+	var promise = new Promise((resolve, reject)=>{
+	filter={
+		query:query, 
+		ll:location[0]+","+location[1]
+	}
 
-	var promise = new Promise((resolve, reject)=>{;
-		places.search({keyword: query, 
-			radius:9000,
-			location:location
-		}, 
-		function(err, response) {
-			console.log("search: ", response.results);
-			resolve(_.map(response.results, _mapSites));
-		}
-	, function(err, response) {
-		console.log("search details: ", response.result.website);
-	})
+	foursquare.venues.search(filter, (err, data)=>{
+		resolve(data.response.venues.map(_mapForSquareSites));
 		})
+	})
 
 	return promise;
 }
@@ -93,11 +92,10 @@ var _generateGoogleApiReq = function(baseAddr,params){
 	return req;
 }
 
-let _mapSites = (site)=>{
+let _mapForSquareSites = (site)=>{
 	return {
 		name:site.name,
-		placeId:site.place_id,
-		rating:site.rating
+		placeId:site.id,
 	}
 }
 
@@ -118,16 +116,31 @@ var _getSiteDataById = (siteId)=>{
 	})
 }
 var getSiteDataById = (siteId)=>{
-	return _getSiteDataById(siteId).then((data)=>{
-		return {
-			placeId:data.result.place_id,
-			name:data.result.name,
-			photos:data.result.photos
-
-		}
+	var promise = new Promise((resolve, reject)=>{
+		//foursquare.venues.
+	foursquare.venues.venue(siteId,{}, (err, data)=>{
+		resolve(_mapFoursquaresite(data.response.venue));
+	//var i  =  data;
+		})
 	})
-}
 
+	return promise;
+
+}
+let _mapFoursquaresite = (site)=>{
+	var photos=[];
+	_.each(site.photos.groups[0].items, (photoItem)=>{
+		photoUrl = photoItem.prefix+ 'width'+photoItem.width+photoItem.suffix;
+		photos.push(photoUrl);
+	})
+	return{
+		placeId:site.id,
+		name:site.name,
+		rating:site.rating,
+		description:site.description,
+		photos:photos
+	}
+}
 module.exports={
 	getCitiesAutoComplete:getCitiesAutoComplete,
 	getAllSiteCategories:getAllSiteCategories,
