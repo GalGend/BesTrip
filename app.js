@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 
-//var index = require('./routes/index');
+//var index = require('./routes/index');s
 var users = require('./user/user.router');
 var locations = require('./location/location.router');
 //var trips = require('./trip/trip.router');
@@ -33,7 +33,7 @@ var locations = require('./location/location.router');
 
 //app.use('/', index);
 app.use('/user', users);
-//app.use('/location', locations); 
+app.use('/location', locations); 
 //app.use('/trip', trips); 
 //app.use('/trip-prefences', tripPrefences); 
 
