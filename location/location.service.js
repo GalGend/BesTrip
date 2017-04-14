@@ -122,7 +122,7 @@ var getSiteDataById = (siteId)=>{
 }
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
-	if (site.photos.groups[0]){
+	if (!_.isUndefined(site.photos.groups[0])){
 		_.each(site.photos.groups[0].items, (photoItem)=>{
 			photoUrl = photoItem.prefix+ 'width'+photoItem.width+photoItem.suffix;
 			photos.push(photoUrl);
