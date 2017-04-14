@@ -9,9 +9,7 @@ var foursquare = Promise.promisifyAll(require('node-foursquare-venues')(process.
 
 var util = require('util');
 
-
-let getCitySitesByCategory = function(cityId, categoryId){
-
+var  getCitySitesByCategory = function(cityId, categoryId){
 	return Promise.props({
 			cityData: _getSiteDataById(cityId), 
 			siteCategory: _getCategoryById(categoryId)
@@ -32,8 +30,7 @@ let getCitySitesByCategory = function(cityId, categoryId){
 
 	return searchSitesByQuery(query, location)
 }
-let searchSitesByQuery=(query, location)=>{
-	
+var searchSitesByQuery=(query, location)=>{
 	var filter={
 		query:query, 
 		ll:location[0]+","+location[1],
@@ -97,7 +94,7 @@ let _mapForSquareSites = (site)=>{
 	}
 }
 
-var _mapCity = (city) =>{
+let _mapCity = (city) =>{
 	return {
 		id:city.id,
 		placeId:city.place_id, 
@@ -106,20 +103,19 @@ var _mapCity = (city) =>{
 	}
 }
 
-var _getSiteDataById = (siteId)=>{
+let _getSiteDataById = (siteId)=>{
 	var uri = _generateGoogleApiReq(process.env.GGL_SITES_API_ADDR, {placeid:siteId});
 	return Request({
 		uri:uri,
 		json:true
 	})
 }
-var getSiteDataById = (siteId)=>{
+ let  getSiteDataById = (siteId)=>{
 	return Promise.promisify(foursquare.venues.venue)(siteId).then((data)=>{
 		return _mapFoursquaresite(data.response.venue);
 	})
-
-
 }
+
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
 	if (!_.isUndefined(site.photos.groups[0])){

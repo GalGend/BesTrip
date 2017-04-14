@@ -35,7 +35,7 @@ let getAllSiteCategories=(req, res)=>{
 let getCitySitesByCategory = (req, res) =>{
 	try{
 		var cityId = req.query.cityId;
-		var categoryId = req.query.categoryId;
+		var categoryIds = req.query.categoryIds;
 		if (_.isUndefined(cityId)|| _.isUndefined(categoryId)){
 			baseController.handleBadRequestError("city sites by categories bad params")
 		}
@@ -44,6 +44,7 @@ let getCitySitesByCategory = (req, res) =>{
 		baseController.handleBadRequestError("city sites by categories bad params")
 	}
 	try{
+		// splitting the ids into an array
 		locationsService.getCitySitesByCategory(cityId, categoryId)
 		.then(baseController.createDataHandler(res))
 		.catch(baseController.createErrorHandler(res, "City sites by category error"))
