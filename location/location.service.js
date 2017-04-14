@@ -33,18 +33,16 @@ let getCitySitesByCategory = function(cityId, categoryId){
 	return searchSitesByQuery(query, location)
 }
 let searchSitesByQuery=(query, location)=>{
-	var promise = new Promise((resolve, reject)=>{
-	filter={
+	
+	var filter={
 		query:query, 
-		ll:location[0]+","+location[1]
+		ll:location[0]+","+location[1],
 	}
 
-	foursquare.venues.search(filter, (err, data)=>{
-		resolve(data.response.venues.map(_mapForSquareSites));
-		})
+	return Promise.promisify(foursquare.venues.search)(filter)
+	.then((data)=>{
+		return data.response.venues.map(_mapForSquareSites);
 	})
-
-	return promise;
 }
 let getAllSiteCategories = function(){
 	return SiteCategory.find({});
@@ -116,15 +114,10 @@ var _getSiteDataById = (siteId)=>{
 	})
 }
 var getSiteDataById = (siteId)=>{
-	var promise = new Promise((resolve, reject)=>{
-		//foursquare.venues.
-	foursquare.venues.venue(siteId,{}, (err, data)=>{
-		resolve(_mapFoursquaresite(data.response.venue));
-	//var i  =  data;
-		})
+	return Promise.promisify(foursquare.venues.venue)(siteId).then((data)=>{
+		return _mapFoursquaresite(data.response.venue);
 	})
 
-	return promise;
 
 }
 let _mapFoursquaresite = (site)=>{
