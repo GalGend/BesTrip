@@ -122,10 +122,12 @@ var getSiteDataById = (siteId)=>{
 }
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
-	_.each(site.photos.groups[0].items, (photoItem)=>{
-		photoUrl = photoItem.prefix+ 'width'+photoItem.width+photoItem.suffix;
-		photos.push(photoUrl);
-	})
+	if (site.photos.groups[0]){
+		_.each(site.photos.groups[0].items, (photoItem)=>{
+			photoUrl = photoItem.prefix+ 'width'+photoItem.width+photoItem.suffix;
+			photos.push(photoUrl);
+		})
+	}
 	return{
 		placeId:site.id,
 		name:site.name,
