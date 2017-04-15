@@ -50,7 +50,10 @@ let searchSitesByQuery=(query, location)=>{
 	}
 
 	foursquare.venues.search(filter, (err, data)=>{
-		resolve(data.response.venues.map(_mapForSquareSites));
+		if(data.response)
+			resolve(data.response.venues.map(_mapForSquareSites));
+		else
+			throw "Foursqaure Internal Error"
 		})
 	})
 
