@@ -27,9 +27,18 @@ var siteCategory = new mongo.Schema({
   foursquareQuery:String
 })
 
+var generateIdList = (list)=>{
+  var ids = []
+  list.forEach((id)=>{ids.push( mongo.Types.ObjectId(id))})
+  return ids;
+}
+
 module.exports={
     models:{
         users: mongo.model('User', userSchema),
         siteCategory:mongo.model('SiteCategory', siteCategory)
+    },
+    tools:{
+      generateIdList:generateIdList
     }
 }

@@ -1,3 +1,9 @@
+process.on('uncaughtException', function (exception) {
+  console.log(exception); // to see your exception details in the console
+  // if you are on production, maybe you can send the exception details to your
+  // email as well ?
+});
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -19,16 +25,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 
-//var index = require('./routes/index');
+//var index = require('./routes/index');s
 var users = require('./user/user.router');
 var locations = require('./location/location.router');
-//var trips = require('./trip/trip.router');
+var trips = require('./trip/trip.router');
 //var tripPrefences = require('./trip-prefences/trip-prefences.router');
 
 //app.use('/', index);
 app.use('/user', users);
 app.use('/location', locations); 
-//app.use('/trip', trips); 
+app.use('/trip', trips); 
 //app.use('/trip-prefences', tripPrefences); 
 
 // catch 404 and forward to error handler

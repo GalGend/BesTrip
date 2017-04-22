@@ -1,7 +1,8 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var Request = require('request-promise');
-var SiteCategory = require("../common/db-access").models.siteCategory;
+var dbAccess = require("../common/db-access");
+var SiteCategory = dbAccess.models.siteCategory;
 
 var GooglePlaces = require('google-places');
 var places = new GooglePlaces(process.env.GGL_API_KEY)
@@ -10,37 +11,48 @@ var foursquare = Promise.promisifyAll(require('node-foursquare-venues')(process.
 var util = require('util');
 
 
-let getCitySitesByCategory = function(cityId, categoryId){
+let getCitySitesByCategory = function(cityId, categoryIds){
 
 	return Promise.props({
 			cityData: _getSiteDataById(cityId), 
-			siteCategory: _getCategoryById(categoryId)
-		}).then(function(result) {
+			categories: _getCategoryById(categoryIds)
+	}).then(function(result) {
 			// Checking that all data exist
-			try{
+		try{
 			var coords = [result.cityData.result.geometry.location.lat,
-						result.cityData.result.geometry.location.lng]
-			var query = result.siteCategory[0]._doc.foursquareQuery;
+								result.cityData.result.geometry.location.lng]
+			var sitesByCategories = {};
+			result.categories.forEach((model)=>{
+				sitesByCategories[model._doc.name] =searchSitesByQuery(model._doc.foursquareQuery, coords)
+			})
 			
-			return searchSitesByQuery(query, coords);
+			return Promise.props(sitesByCategories)
+			
 		}
 		catch(err){
 			console.error("Error performing getting sites by city and category id: " +err)
 			throw "Error performing getting sites by city and category id: " + err;
 		}
+	})
+		.catch((err)=>{
+			console.error("Error performing getting sites by city and category id: " +err)
 		});
-
-	return searchSitesByQuery(query, location)
 }
+
 let searchSitesByQuery=(query, location)=>{
-	var promise = new Promise((resolve, reject)=>{
+	var promise = new Promise((resolve, r58e7b6e065002073b1d0aae0eject)=>{
 	filter={
 		query:query, 
-		ll:location[0]+","+location[1]
+		ll:location[0]+","+location[1], 
+		//categories:"4bf58dd8d48988d1f1931735"
+		//section:'tending'
 	}
 
-	foursquare.venues.search(filter, (err, data)=>{
-		resolve(data.response.venues.map(_mapForSquareSites));
+	foursquare.venues.explore(filter, (err, data)=>{
+		if(data.response)
+			resolve(data.response.venues.map(_mapForSquareSites));
+		else
+			throw "Foursqaure Internal Error"
 		})
 	})
 
@@ -50,8 +62,20 @@ let getAllSiteCategories = function(){
 	return SiteCategory.find({});
 }
 
-let _getCategoryById = function(categoryId){
-	return SiteCategory.find({_id:categoryId});
+let _getCategoryById = function(categoryIds){
+	var pr = new Promise((resolve, reject)=>{
+		SiteCategory.find()
+	 	.where('_id')
+	 	.in(dbAccess.tools.generateIdList(categoryIds))
+	 	.exec((err, data)=>{
+			 if(err)	
+			 	reject('Error from db getting categories')
+			else
+				resolve(data)
+		 })
+	})
+
+	return pr;
 }
 var getCitiesAutoComplete = function(searcText){
 	// Generating the request to the google api
@@ -119,26 +143,29 @@ var getSiteDataById = (siteId)=>{
 	var promise = new Promise((resolve, reject)=>{
 		//foursquare.venues.
 	foursquare.venues.venue(siteId,{}, (err, data)=>{
-		resolve(_mapFoursquaresite(data.response.venue));
-	//var i  =  data;
+		if(data.response)
+			resolve(_mapFoursquaresite(data.response.venue));
+		else
+			reject('Foursqaure Internal Error');
 		})
 	})
-
 	return promise;
-
 }
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
-	_.each(site.photos.groups[0].items, (photoItem)=>{
-		photoUrl = photoItem.prefix+ 'width'+photoItem.width+photoItem.suffix;
-		photos.push(photoUrl);
-	})
+	if(site.photos.groups[0]){
+		_.each(site.photos.groups[0].items, (photoItem)=>{
+			photoUrl = photoItem.prefix+ 'width'+photoItem.width+photoItem.suffix;
+			photos.push(photoUrl);
+		})
+	}
 	return{
 		placeId:site.id,
 		name:site.name,
 		rating:site.rating,
 		description:site.description,
-		photos:photos
+		photos:photos,
+		location:[site.location.lat,site.location.lng]
 	}
 }
 module.exports={
@@ -147,4 +174,3 @@ module.exports={
 	getCitySitesByCategory:getCitySitesByCategory,
 	getSiteById:getSiteDataById
 }
-	
