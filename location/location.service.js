@@ -16,40 +16,39 @@ let getCitySitesByCategory = function(cityId, categoryIds){
 	return Promise.props({
 			cityData: _getSiteDataById(cityId), 
 			categories: _getCategoryById(categoryIds)
-		}).then(function(result) {
+	}).then(function(result) {
 			// Checking that all data exist
-			try{
+		try{
 			var coords = [result.cityData.result.geometry.location.lat,
-						result.cityData.result.geometry.location.lng]
-			//var query = result.categories[0]._doc.foursquareQuery;
-			var categories = {};
+								result.cityData.result.geometry.location.lng]
+			var sitesByCategories = {};
 			result.categories.forEach((model)=>{
-				categories[model._doc.name] =searchSitesByQuery(model._doc.foursquareQuery, coords)
+				sitesByCategories[model._doc.name] =searchSitesByQuery(model._doc.foursquareQuery, coords)
 			})
-			// need to create object with the category name and their queries
-			//categories
-
-			return Promise.props(
-				categories
-			)
-			//searchSitesByQuery(queries, coords);
+			
+			return Promise.props(sitesByCategories)
+			
 		}
 		catch(err){
 			console.error("Error performing getting sites by city and category id: " +err)
 			throw "Error performing getting sites by city and category id: " + err;
 		}
+	})
+		.catch((err)=>{
+			console.error("Error performing getting sites by city and category id: " +err)
 		});
-
-	return searchSitesByQuery(query, location)
 }
+
 let searchSitesByQuery=(query, location)=>{
-	var promise = new Promise((resolve, reject)=>{
+	var promise = new Promise((resolve, r58e7b6e065002073b1d0aae0eject)=>{
 	filter={
 		query:query, 
-		ll:location[0]+","+location[1]
+		ll:location[0]+","+location[1], 
+		//categories:"4bf58dd8d48988d1f1931735"
+		//section:'tending'
 	}
 
-	foursquare.venues.search(filter, (err, data)=>{
+	foursquare.venues.explore(filter, (err, data)=>{
 		if(data.response)
 			resolve(data.response.venues.map(_mapForSquareSites));
 		else
@@ -70,7 +69,7 @@ let _getCategoryById = function(categoryIds){
 	 	.in(dbAccess.tools.generateIdList(categoryIds))
 	 	.exec((err, data)=>{
 			 if(err)	
-			 	reject('error from db')
+			 	reject('Error from db getting categories')
 			else
 				resolve(data)
 		 })
@@ -124,7 +123,6 @@ let _mapForSquareSites = (site)=>{
 	}
 }
 
-
 var _mapCity = (city) =>{
 	return {
 		id:city.id,
@@ -145,13 +143,13 @@ var getSiteDataById = (siteId)=>{
 	var promise = new Promise((resolve, reject)=>{
 		//foursquare.venues.
 	foursquare.venues.venue(siteId,{}, (err, data)=>{
-		resolve(_mapFoursquaresite(data.response.venue));
-	//var i  =  data;
+		if(data.response)
+			resolve(_mapFoursquaresite(data.response.venue));
+		else
+			reject('Foursqaure Internal Error');
 		})
 	})
-
 	return promise;
-
 }
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
@@ -166,7 +164,8 @@ let _mapFoursquaresite = (site)=>{
 		name:site.name,
 		rating:site.rating,
 		description:site.description,
-		photos:photos
+		photos:photos,
+		location:[site.location.lat,site.location.lng]
 	}
 }
 module.exports={
