@@ -40,7 +40,7 @@ let getCitySitesByCategory = function(cityId, categoryIds){
 }
 
 let searchSitesByQuery=(query, location)=>{
-	var promise = new Promise((resolve, r58e7b6e065002073b1d0aae0eject)=>{
+	var promise = new Promise((resolve, reject)=>{
 	filter={
 		query:query, 
 		ll:location[0]+","+location[1], 
@@ -48,7 +48,7 @@ let searchSitesByQuery=(query, location)=>{
 		//section:'tending'
 	}
 
-	foursquare.venues.explore(filter, (err, data)=>{
+	foursquare.venues.search(filter, (err, data)=>{
 		if(data.response)
 			resolve(data.response.venues.map(_mapForSquareSites));
 		else
