@@ -19,11 +19,12 @@ let getCitySitesByCategory = function(cityId, categoryIds){
 	}).then(function(result) {
 			// Checking that all data exist
 		try{
-			var coords = [result.cityData.result.geometry.location.lat,
-								result.cityData.result.geometry.location.lng]
+			//var coords = [result.cityData.result.geometry.location.lat,
+			//					result.cityData.result.geometry.location.lng]
+			var address = result.cityData.result.formatted_address;
 			var sitesByCategories = {};
 			result.categories.forEach((model)=>{
-				sitesByCategories[model._doc.name] =searchSitesByQuery(model._doc.foursquareQuery, coords)
+				sitesByCategories[model._doc.name] =searchSitesByQuery(model._doc.foursquareQuery, address)
 			})
 			
 			return Promise.props(sitesByCategories)
@@ -39,18 +40,19 @@ let getCitySitesByCategory = function(cityId, categoryIds){
 		});
 }
 
-let searchSitesByQuery=(query, location)=>{
-	var promise = new Promise((resolve, r58e7b6e065002073b1d0aae0eject)=>{
+let searchSitesByQuery=(query, address)=>{
+	var promise = new Promise((resolve, reject)=>{
 	filter={
 		query:query, 
-		ll:location[0]+","+location[1], 
+		//ll:location[0]+","+location[1], 
 		//categories:"4bf58dd8d48988d1f1931735"
 		//section:'tending'
+		near:address
 	}
 
 	foursquare.venues.explore(filter, (err, data)=>{
 		if(data.response)
-			resolve(data.response.venues.map(_mapForSquareSites));
+			resolve(data.response.groups[0].items.map(_mapForSquareSites));
 		else
 			throw "Foursqaure Internal Error"
 		})
@@ -118,8 +120,8 @@ var _generateGoogleApiReq = function(baseAddr,params){
 
 let _mapForSquareSites = (site)=>{
 	return {
-		name:site.name,
-		placeId:site.id,
+		name:site.venue.name,
+		placeId:site.venue.id,
 	}
 }
 
