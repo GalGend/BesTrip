@@ -19,8 +19,6 @@ let getCitySitesByCategory = function(cityId, categoryIds){
 	}).then(function(result) {
 			// Checking that all data exist
 		try{
-			//var coords = [result.cityData.result.geometry.location.lat,
-			//					result.cityData.result.geometry.location.lng]
 			var address = result.cityData.result.formatted_address;
 			var sitesByCategories = {};
 			result.categories.forEach((model)=>{
@@ -44,9 +42,7 @@ let searchSitesByQuery=(query, address)=>{
 	var promise = new Promise((resolve, reject)=>{
 	filter={
 		query:query, 
-		//ll:location[0]+","+location[1], 
-		//categories:"4bf58dd8d48988d1f1931735"
-		//section:'tending'
+
 		near:address
 	}
 
