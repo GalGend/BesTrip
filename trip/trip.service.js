@@ -2,42 +2,42 @@ var Trip = require('../common/db-access').models.trip;
 var Promise = require('bluebird');
 
 var getTripById=function(mongoId){
-   // return Trip.findById(mongoId)
-   var trip = {
-	name:"Trip To London",
-	dates:{
-		from: new Date("2016/12/05"),
-		to:new Date("2016/12/07"),
-	},
-	days:[{
-			index:1,
-			date:new Date("2016/12/05"),
-			locations:[[
-				51.50778087767913,
-				-0.16239166259765625
-			],[
-				51.50141662864482,
-				-0.14085023600947902
-			],[
-			51.51329696070227,
-			-0.15859290988571317
-		]
-            ]
+    return Trip.findById(mongoId)
+//    var trip = {
+// 	name:"Trip To London",
+// 	dates:{
+// 		from: new Date("2016/12/05"),
+// 		to:new Date("2016/12/07"),
+// 	},
+// 	days:[{
+// 			index:1,
+// 			date:new Date("2016/12/05"),
+// 			locations:[[
+// 				51.50778087767913,
+// 				-0.16239166259765625
+// 			],[
+// 				51.50141662864482,
+// 				-0.14085023600947902
+// 			],[
+// 			51.51329696070227,
+// 			-0.15859290988571317
+// 		]
+//             ]
 			
-		},{
-			index:2,
-			date:new Date("2016/12/06"), 
-		},{
-			index:3,
-			date:new Date("2016/12/07")
-		},
-	]
+// 		},{
+// 			index:2,
+// 			date:new Date("2016/12/06"), 
+// 		},{
+// 			index:3,
+// 			date:new Date("2016/12/07")
+// 		},
+// 	]
 
-}
-   var promise = new Promise((resolve, reject)=>{
-        resolve(trip)
-   })
-    return promise;
+// }
+//    var promise = new Promise((resolve, reject)=>{
+//         resolve(trip)
+//    })
+//     return promise;
 
    
 }

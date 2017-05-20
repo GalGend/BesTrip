@@ -16,9 +16,30 @@ var userSchema = new mongo.Schema({
 
 var tripSchema = new mongo.Schema({
   name:  String,
-//  city:{name:String, id:String},
- // city:{},
-  perfences:[]
+  dates:{from:Date,
+        to:Date},
+  user:String,
+  accomodation:{
+    accomodationName:String,
+    accomodationLocation:[],
+    tripPlan:{
+      days:[{
+        dayIndex:Number,
+        date:Date,
+        sites:[{
+          siteIndex:Number,
+          siteName:String,
+          siteLocation:[],
+          placeId:String
+        }],
+        transport:[{
+          toSiteIndex:Number,
+          method:String,
+          description:String
+        }]
+      }]
+    }
+  }
 }); 
 
 var siteCategory = new mongo.Schema({
@@ -36,7 +57,8 @@ var generateIdList = (list)=>{
 module.exports={
     models:{
         users: mongo.model('User', userSchema),
-        siteCategory:mongo.model('SiteCategory', siteCategory)
+        siteCategory:mongo.model('SiteCategory', siteCategory),
+        trip:mongo.model('Trip', tripSchema)
     },
     tools:{
       generateIdList:generateIdList
