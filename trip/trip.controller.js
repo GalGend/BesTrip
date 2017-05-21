@@ -12,7 +12,7 @@ var getTripById = function(req, res){
 		baseController.handleBadRequestError("Get trip by id bad params")
 	}
 	try{
-		tripService.getTripById(tripId)
+		tripService.getTripById('58fa5bf865002073b1d2b244')
 		.then(baseController.createDataHandler(res))
 		.catch(baseController.createErrorHandler(res, "Get trip By id Internal error"))
 	}
