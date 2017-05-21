@@ -19,7 +19,6 @@ return Trip.find({_id:dbAccess.tools.getIdObject(tripId),
 
 }
 
-
 module.exports={
     getTripById:getTripById,
     getTripDayByIndex:getTripDayByIndex
