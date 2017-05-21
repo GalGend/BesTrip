@@ -19,6 +19,10 @@ return Trip.find({_id:dbAccess.tools.getIdObject(tripId),
 
 }
 
+var saveNewTrip = function(tripObject){
+	//Trip.p
+}
+
 module.exports={
     getTripById:getTripById,
     getTripDayByIndex:getTripDayByIndex
