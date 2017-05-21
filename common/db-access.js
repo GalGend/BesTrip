@@ -1,5 +1,6 @@
 var Promise = require('bluebird')
 var mongo = Promise.promisifyAll(require('mongoose'));
+var tripSchema = require("./db-schemas/tripSchema")(mongo)
 
 // connecting to the server
 mongo.connect("mongodb://admin:admin@ds137530.mlab.com:37530/bestrip");
@@ -14,33 +15,7 @@ var userSchema = new mongo.Schema({
 // ref:'Users'
 }); 
 
-var tripSchema = new mongo.Schema({
-  name:  String,
-  dates:{from:Date,
-        to:Date},
-  user:String,
-  accomodation:{
-    accomodationName:String,
-    accomodationLocation:[],
-    tripPlan:{
-      days:[{
-        dayIndex:Number,
-        date:Date,
-        sites:[{
-          siteIndex:Number,
-          siteName:String,
-          siteLocation:[],
-          placeId:String
-        }],
-        transport:[{
-          toSiteIndex:Number,
-          method:String,
-          description:String
-        }]
-      }]
-    }
-  }
-}); 
+
 
 var siteCategory = new mongo.Schema({
   name:String,
@@ -54,13 +29,18 @@ var generateIdList = (list)=>{
   return ids;
 }
 
+var getIdObject = (id)=>{
+  return mongo.Types.ObjectId(id);
+}
+
 module.exports={
     models:{
         users: mongo.model('User', userSchema),
         siteCategory:mongo.model('SiteCategory', siteCategory),
-        trip:mongo.model('Trip', tripSchema)
+        trip:mongo.model('Trip',tripSchema)
     },
     tools:{
-      generateIdList:generateIdList
+      generateIdList:generateIdList,
+      getIdObject:getIdObject
     }
 }
