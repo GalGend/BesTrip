@@ -3,7 +3,6 @@ var baseController = require('../common/base.controller')
 var _ = require('underscore');
 
 let autocompleteCities=(req, res)=>{
-	console.log('Autocomplete request ');
     var text = req.param('text'); 
 	if (typeof text === undefined)
     	baseController.handleBadRequestError("autocomplete search text wasn't found")
@@ -16,6 +15,24 @@ let autocompleteCities=(req, res)=>{
 		}
 		catch(error){
 			baseController.createErrorHandler(res, "Cities autocomplete error")(error);
+		}
+	}
+}
+
+let autocompleteHotels=(req, res)=>{
+    var text = req.param('text'); 
+	var city = req.param('cityId');
+	if (typeof text === undefined)
+    	baseController.handleBadRequestError("hotels autocomplete search text wasn't found- bad params")
+
+	else{
+		try{
+		locationsService.getCitiesAutoComplete(text)
+		.then(baseController.createDataHandler(res))
+		.catch(baseController.createErrorHandler(res, "hotels autocomplete error"))
+		}
+		catch(error){
+			baseController.createErrorHandler(res, "hotels autocomplete error")(error);
 		}
 	}
 }
