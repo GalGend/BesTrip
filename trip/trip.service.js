@@ -1,6 +1,7 @@
 var dbAccess = require('../common/db-access')
 var Trip = dbAccess.models.trip;
 var Promise = require('bluebird');
+var locationService = require('../location/location.service')
 
 var getTripById=function(mongoId){
     return Trip.findById(mongoId, {name:1, 
@@ -19,7 +20,36 @@ return Trip.find({_id:dbAccess.tools.getIdObject(tripId),
 
 }
 
+var saveNewTrip = function(tripObj){
+	var trip  = new Trip({name:tripObj.name,
+		user: tripObj.user,
+		dates:tripObj.dates, 
+		accomodation:{
+			accomodationPlaceId:accomodationPlaceId
+		}, 
+		tripPlan:{}
+	})
+
+	// Getting all the missing params:
+	// Data for the accomodation
+	return locationService.getSiteById(tripObj.accomodationPlaceId)
+	.then((hotelSite)=>{
+		// Setting the accomodation on the new trip
+		trip.accomodation.accomodationLocation = hotelSite.location,
+		trip.accomodation.accomodationName  = hotelSite.name
+
+		return trip.save();
+	})
+
+}
+
+var updateTripPlan = function(tripId, tripPlan){
+	return Trip.findOneAndUpdate()
+}
 module.exports={
     getTripById:getTripById,
-    getTripDayByIndex:getTripDayByIndex
+    getTripDayByIndex:getTripDayByIndex,
+	saveNewTrip :saveNewTrip,
+	updateTripPlan:updateTripPlan
+	
 }
