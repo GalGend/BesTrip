@@ -42,7 +42,6 @@ let searchSitesByQuery=(query, address)=>{
 	var promise = new Promise((resolve, reject)=>{
 	filter={
 		query:query, 
-
 		near:address
 	}
 
@@ -166,9 +165,41 @@ let _mapFoursquaresite = (site)=>{
 		location:[site.location.lat,site.location.lng]
 	}
 }
+
+var getHotelAutocomplete = function(searcText, cityId){
+
+	return _getSiteDataById(cityId).then((cityData)=>{
+		var address = cityData.result.formatted_address;
+		var promise = new Promise((resolve, reject)=>{
+		filter={
+			query:searcText, 
+			near:address,
+			categoryId:'4bf58dd8d48988d1fa931735'
+		}
+
+		foursquare.venues.search(filter, (err, data)=>{
+			if(data.response)
+				resolve(data.response.venues.map(_mapHotel));
+			else
+				throw "Foursqaure Internal Error"
+			})
+		})
+
+		return promise;
+	})
+	
+}
+
+let _mapHotel = (hotelData)=>{
+	return {
+		placeId:hotelData.id,
+		name:hotelData.name
+	}
+}
 module.exports={
 	getCitiesAutoComplete:getCitiesAutoComplete,
 	getAllSiteCategories:getAllSiteCategories,
 	getCitySitesByCategory:getCitySitesByCategory,
-	getSiteById:getSiteDataById
+	getSiteById:getSiteDataById,
+	getHotelAutocomplete:getHotelAutocomplete
 }

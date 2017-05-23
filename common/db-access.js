@@ -15,8 +15,6 @@ var userSchema = new mongo.Schema({
 // ref:'Users'
 }); 
 
-
-
 var siteCategory = new mongo.Schema({
   name:String,
   googleQuery:String, 
