@@ -23,6 +23,7 @@ return Trip.find({_id:dbAccess.tools.getIdObject(tripId),
 
 }
 
+
 var saveNewTrip = function(tripObj){
 	var trip  = new Trip({name:tripObj.name,
 		user: tripObj.user,
@@ -49,6 +50,7 @@ var saveNewTrip = function(tripObj){
 var updateTripPlan = function(tripId, tripPlan){
 	return Trip.findOneAndUpdate()
 }
+
 module.exports={
     getTripById:getTripById,
     getTripDayByIndex:getTripDayByIndex,
