@@ -19,24 +19,6 @@ let autocompleteCities=(req, res)=>{
 	}
 }
 
-let autocompleteHotels=(req, res)=>{
-    var text = req.param('text'); 
-	var city = req.param('cityId');
-	if (typeof text === undefined)
-    	baseController.handleBadRequestError("hotels autocomplete search text wasn't found- bad params")
-
-	else{
-		try{
-		locationsService.getCitiesAutoComplete(text)
-		.then(baseController.createDataHandler(res))
-		.catch(baseController.createErrorHandler(res, "hotels autocomplete error"))
-		}
-		catch(error){
-			baseController.createErrorHandler(res, "hotels autocomplete error")(error);
-		}
-	}
-}
-
 let getAllSiteCategories=(req, res)=>{
 	console.log('site categories request');
 	try{
@@ -88,9 +70,28 @@ let getSiteById = (req, res)=>{
 	}
 }
 
+let autocompleteHotels=(req, res)=>{
+    var text = req.param('text'); 
+	var cityId = req.param('cityId'); 
+	if (typeof text === undefined || typeof cityId === undefined)
+    	baseController.handleBadRequestError("autocomplete search text or place id wasn't found")
+
+	else{
+		try{
+		locationsService.getHotelAutocomplete(text,cityId)
+		.then(baseController.createDataHandler(res))
+		.catch(baseController.createErrorHandler(res, "Hotels autocomplete error"))
+		}
+		catch(error){
+			baseController.createErrorHandler(res, "Hotels autocomplete error")(error);
+		}
+	}
+}
+
 module.exports = {
     autocompleteCities:autocompleteCities,
 	getAllSiteCategories:getAllSiteCategories,
 	getCitySitesByCategory:getCitySitesByCategory,
-	getSiteById:getSiteById
+	getSiteById:getSiteById,
+	autocompleteHotels:autocompleteHotels
 }
