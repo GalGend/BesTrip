@@ -51,14 +51,9 @@ var updateTripPlan = function(tripId, tripPlan){
 	return Trip.findOneAndUpdate()
 }
 
-module.exports={
-    getTripById:getTripById,
-    getTripDayByIndex:getTripDayByIndex,
-	saveNewTrip :saveNewTrip,
-	updateTripPlan:updateTripPlan
-	
+var getTripsByUser = function(userId){
+	return Trip.find({user:userId}, {_id:1, name:1})
 }
-
 var _formatTripDetails=(trip) =>{
 
 	var days =[]
@@ -82,3 +77,12 @@ var _formatTripDetails=(trip) =>{
 		days:days
 	}
 }
+module.exports={
+    getTripById:getTripById,
+    getTripDayByIndex:getTripDayByIndex,
+	saveNewTrip :saveNewTrip,
+	updateTripPlan:updateTripPlan, 
+	getTripsByUser:getTripsByUser
+	
+}
+
