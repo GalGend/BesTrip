@@ -1,105 +1,84 @@
-var Trip = require('../common/db-access').models.trip;
+var dbAccess = require('../common/db-access')
+var Trip = dbAccess.models.trip;
 var Promise = require('bluebird');
+var locationService = require('../location/location.service')
 
 var getTripById=function(mongoId){
-   // return Trip.findById(mongoId)
-   var trip = {
-	name:"Trip To London",
-	dates:{
-		from: new Date("2016/12/05"),
-		to:new Date("2016/12/07"),
-	},
-	days:[{
-			index:1,
-			date:new Date("2016/12/05"),
-			locations:[[
-				51.50778087767913,
-				-0.16239166259765625
-			],[
-				51.50141662864482,
-				-0.14085023600947902
-			],[
-			51.51329696070227,
-			-0.15859290988571317
-		]
-            ]
-			
-		},{
-			index:2,
-			date:new Date("2016/12/06"), 
-		},{
-			index:3,
-			date:new Date("2016/12/07")
-		},
-	]
-
-}
-   var promise = new Promise((resolve, reject)=>{
-        resolve(trip)
-   })
-    return promise;
-
-   
+    return Trip.findById(mongoId, {name:1, 
+		_id:0, dates:1, "tripPlan.days":1, "tripPlan.days.sites.siteLocation":1,
+		"tripPlan.days.dayIndex":1, "tripPlan.days.date":1
+	}).then((day)=>{
+		// Returning the formatted trip
+		return _formatTripDetails(day);
+	})
 }
 
 var getTripDayByIndex=function(tripId, dayIndex){
-var tripDay={
-	index:1,
-	date:"05-12-16",
-	sites:[{
-		index:1,
-		name:"Buckingham Palace",
-		placeId:"4abe4502f964a520558c20e3",
-		location: [
-			51.50141662864482,
-		-0.14085023600947902
-]
-	},{
-		index:2,
-		name:"Hyde Park",
-		placeId:"4ac518d2f964a52026a720e3",
-		location: [
-			51.50778087767913,
-			-0.16239166259765625
-		]
-	},{
-		index:3,
-		name:"Marble Arch",
-		placeId:"4bd195aa9854d13a9abff94d",
-		location: [
-			51.51329696070227,
-			-0.15859290988571317
-		]
-	}
-	],
-	transport:[
-		{
-			
-			method:"bus",
-			description:"Take 68 from Royal National Hotel to Buckingham Palace Road"
-		},
-		{
-			method:"taxi",
-			description:"Ask the driver to go to Hyde Park Corner"
-		},
-		{
-			method:"walk",
-			description:"Walk 2 minutes from Hyde Park corner to Marble Arch Corner"
-		}
-	]
+return Trip.find({_id:dbAccess.tools.getIdObject(tripId), 
+	"tripPlan.days.dayIndex":parseInt(dayIndex)}, 
+	{_id:0, 'tripPlan.days.$':1}).then(function(data){
+		// Resolving only that day
+		return data[0]._doc.tripPlan.days[0]
+	})
+
 }
 
 
-    
+var saveNewTrip = function(tripObj){
+	var trip  = new Trip({name:tripObj.name,
+		user: tripObj.user,
+		dates:tripObj.dates, 
+		accomodation:{
+			accomodationPlaceId:accomodationPlaceId
+		}, 
+		tripPlan:{}
+	})
 
-    var promise = new Promise((resolve, reject)=>{
-            resolve(tripDay)
-    })
-        return promise;
+	// Getting all the missing params:
+	// Data for the accomodation
+	return locationService.getSiteById(tripObj.accomodationPlaceId)
+	.then((hotelSite)=>{
+		// Setting the accomodation on the new trip
+		trip.accomodation.accomodationLocation = hotelSite.location,
+		trip.accomodation.accomodationName  = hotelSite.name
+
+		return trip.save();
+	})
+
 }
 
+var updateTripPlan = function(tripId, tripPlan){
+	return Trip.findOneAndUpdate()
+}
 
 module.exports={
     getTripById:getTripById,
-    getTripDayByIndex:getTripDayByIndex
+    getTripDayByIndex:getTripDayByIndex,
+	saveNewTrip :saveNewTrip,
+	updateTripPlan:updateTripPlan
+	
+}
+
+var _formatTripDetails=(trip) =>{
+
+	var days =[]
+	trip.tripPlan.days.forEach((day)=>{
+		dayLocations = [];
+		day.sites.forEach((site)=>{
+			dayLocations.push(site.siteLocation)
+		})
+		var cday = {
+			index:day.dayIndex,
+			date:day.date,
+			locations:dayLocations
+		};
+
+		days.push(cday)
+	})
+
+	return {
+		name:trip.name,
+		dates:trip.dates,
+		days:days
+	}
 }
