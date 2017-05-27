@@ -4,32 +4,27 @@ var BOT = require('./bot/bot');
 var BOTSite = require('./bot/bot-models/botSite')
 var BOTDistanceTable = require('./bot/bot-models/botDistanceTable');
 var BOTSiteLengthEnum = require('./bot/bot-models/botSiteLengthEnum');
+var LocationService = require('../location/location.service')
 
 // This is the class that generates the trips.
 // It recieves the user perfences .
 function TripPlanner (tripDates, accomodation, selectedSites){
     this.tripDates = tripDates;
-    this.tripLength = 3/* tripDates.endDate - tripDates.startDate; */
+    this.tripLength = 9/* tripDates.endDate - tripDates.startDate; */
 
     this.accomodation = accomodation;
     this.sites = selectedSites;
 
-    this._distanceCalculatorFunc = (first, second)=>{
-        // TODO: use actul distance calculator
-        return new Promise(function(resolve, reject){
-            var val = Math.floor(Math.random()*(20-1+1)+1);
-            console.log('Distance between %d and %d is %d', first, second, val)
-            resolve (val)
-        })
-    }
-
     // The BOT Should recieve /: 1. a list of BOTSites/ 2. a BOT DistanceTable
     this.plan = function(){
+        var self = this;
         // Crating a new BOT 
-
         var botSites = []
-        for (var i in sites){
-        botSites.push(new BOTSite(sites[i], i, this.getSiteLength(sites[i])))
+
+        //botSites
+        for (var i in this.sites){
+            var cSite = this.sites[i];
+        botSites.push(new BOTSite(cSite, i, this.getSiteLength(cSite), cSite.location))
     }
        
         var botDistanceTable = new BOTDistanceTable(botSites.length);
@@ -39,14 +34,23 @@ function TripPlanner (tripDates, accomodation, selectedSites){
         botDistanceTable.printDistanceTable(botDistanceTable, botSites);
 
         var optimizer = new BOT(botSites, botDistanceTable,this.tripLength);
-        optimizer.optimize();
+        optimizer.optimize().then((cluster)=>{
+            //cluster.cl
+            for (var day =0 ; day<cluster.length; day++){
+                var dayCluster = cluster[day];
+                console.log('-------------Day %d : ', day);
+                for (var siteIdx =0; siteIdx<dayCluster.clusterInd.length; siteIdx++){
+                    console.log(self.sites[dayCluster.clusterInd[siteIdx]].siteName)
+                }
+            }
+        })
     }
 
 
     this.fillBotDistanceTable = function(botDistanceTable, botSites){
         for (var i=0;i<botSites.length -1; i++ ){
             for (var j =botSites.length -1; j>i; j-- ){
-            var val = Math.floor(Math.random()*(10-1+1)+1);
+            var val = Math.floor(Math.random()*(20-1+1)+1);
             console.log('Distance %d  : %d   %d', i,j,val)
               botDistanceTable.setDistance(i,j,val)
             }
@@ -78,14 +82,6 @@ function TripPlanner (tripDates, accomodation, selectedSites){
 
         }
     }
-
-    this.plan();
 }
-
-TripPlanner({
-    startDate: new Date(2017, 02, 02),
-    endDate: new Date(2017, 03, 03)
-}, 
-undefined,['3523', '12332', '22300', '4930440', '444444', '904738492', '33334', '3205549', '246327'] )
 
 module.exports = TripPlanner;

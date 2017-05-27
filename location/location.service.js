@@ -148,6 +148,17 @@ var getSiteDataById = (siteId)=>{
 	})
 	return promise;
 }
+var getSitesDataByIds = (siteIds)=>{
+
+	promises = [];
+	// Iterating over ids -  and resolving their data
+	for(var i in siteIds){
+		promises[i] = getSiteDataById(siteIds[i])
+	}
+	
+	return Promise.all(promises);
+}
+
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
 	if(site.photos.groups[0]){
@@ -201,5 +212,6 @@ module.exports={
 	getAllSiteCategories:getAllSiteCategories,
 	getCitySitesByCategory:getCitySitesByCategory,
 	getSiteById:getSiteDataById,
-	getHotelAutocomplete:getHotelAutocomplete
+	getHotelAutocomplete:getHotelAutocomplete,
+	getSitesDataByIds:getSitesDataByIds
 }
