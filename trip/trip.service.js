@@ -24,13 +24,12 @@ return Trip.find({_id:dbAccess.tools.getIdObject(tripId),
 
 }
 
-
 var saveNewTrip = function(tripObj){
 	var trip  = new Trip({name:tripObj.name,
 		user: tripObj.user,
 		dates:tripObj.dates, 
 		accomodation:{
-			accomodationPlaceId:accomodationPlaceId
+			accomodationPlaceId:tripObj.accomodationPlaceId
 		}, 
 		tripPlan:{}
 	})
@@ -42,24 +41,30 @@ var saveNewTrip = function(tripObj){
 		// Setting the accomodation on the new trip
 		trip.accomodation.accomodationLocation = hotelSite.location,
 		trip.accomodation.accomodationName  = hotelSite.name
-
-		return trip.save();
+		planTrip(trip._doc.accomodation, tripObj.sites, tripObj.dates)
+		.then(function(tripPlan){
+			//trip.tripPlan.days=tripPlan;
+			trip.tripPlan.days=[];
+			trip.tripPlan.days = tripPlan.days;
+			return trip.save()/* updateTripPlan(tripId, tripPlan) */
+		})
 	})
-
 }
 
 var updateTripPlan = function(tripId, tripPlan){
-	return Trip.findOneAndUpdate()
+	return Trip.findOneAndUpdate({
+		_id:dbAccess.tools.getIdObject(tripId)}, 
+		{'tripPlan':tripPlan})
 }
 
 var planTrip=function(accomodation, siteIds, dates){
 
 	var sites = locationService.getSitesDataByIds(siteIds);
-	sites.then((sites)=>{
+	return sites.then((sites)=>{
 		// Now we have the sites
 		// Also should provide the time to spend in the site
 		var tripPlanner = new TripPlanner(dates, accomodation, _.map(sites, _formatSitesForPlanner));
-		tripPlanner.plan();
+		return tripPlanner.plan()
 	})
 }
 

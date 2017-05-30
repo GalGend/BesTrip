@@ -24,11 +24,22 @@ function BOT(botSites, botDistabceTable, numberOfDays){
 
             this._botKMeans = new BOTKMeans(this._sites, this.numberOfDays);
 
-
             // Now we performing the k means
             this._botKMeans.clusterize().then((cluster)=>{
+
+                // The bot should return the array of the days
+                var daysSites=[];
+                for (var day =0 ; day<cluster.length; day++){
+                    var sites=[]
+                    var dayCluster = cluster[day];
+                    for (var siteIdx =0; siteIdx<dayCluster.clusterInd.length; siteIdx++){
+                       //console.log(self.sites[dayCluster.clusterInd[siteIdx]].siteName)
+                       sites[siteIdx] = dayCluster.clusterInd[siteIdx];
+                    }
+                    daysSites[day] = sites;
+                }
                 // Priniting the 
-                resolve(cluster);
+                resolve(daysSites);
             })
             // Now we have the best partiotion- need to optimize the site assiging
             // need to randomly choose sites - then the value of that partition
