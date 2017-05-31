@@ -58,7 +58,6 @@ let searchSitesByQuery=(query, address)=>{
 let getAllSiteCategories = function(){
 	return SiteCategory.find({});
 }
-
 let _getCategoryById = function(categoryIds){
 	var pr = new Promise((resolve, reject)=>{
 		SiteCategory.find()
@@ -88,6 +87,13 @@ var getCitiesAutoComplete = function(searcText){
 		console.log("Error performing autocomplete request to google "+err);
 		throw "Error performing autocomplete request to google "+err;
 	})
+}
+
+var getDirections = function(firstSite, secondSite){
+	// Need to get the possible directions from google maps
+//getDirections	GooglePlaces.
+//GooglePlaces.
+	var i = 1;
 }
 
 var _generateCityAutocompleteRequest = function(searcText){
@@ -148,6 +154,17 @@ var getSiteDataById = (siteId)=>{
 	})
 	return promise;
 }
+var getSitesDataByIds = (siteIds)=>{
+
+	promises = [];
+	// Iterating over ids -  and resolving their data
+	for(var i in siteIds){
+		promises[i] = getSiteDataById(siteIds[i])
+	}
+	
+	return Promise.all(promises);
+}
+
 let _mapFoursquaresite = (site)=>{
 	var photos=[];
 	if(site.photos.groups[0]){
@@ -201,5 +218,7 @@ module.exports={
 	getAllSiteCategories:getAllSiteCategories,
 	getCitySitesByCategory:getCitySitesByCategory,
 	getSiteById:getSiteDataById,
-	getHotelAutocomplete:getHotelAutocomplete
+	getHotelAutocomplete:getHotelAutocomplete,
+	getSitesDataByIds:getSitesDataByIds,
+	getDirections:getDirections
 }
