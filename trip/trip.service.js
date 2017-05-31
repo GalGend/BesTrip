@@ -7,7 +7,7 @@ var TripPlanner = require('../trip-planner/trip-planner')
 var getTripById=function(mongoId){
     return Trip.findById(mongoId, {name:1, 
 		_id:0, dates:1, "tripPlan.days":1, "tripPlan.days.sites.siteLocation":1,
-		"tripPlan.days.dayIndex":1, "tripPlan.days.date":1
+		"tripPlan.days.dayIndex":1, "tripPlan.days.date":1, "accomodation":1
 	}).then((day)=>{
 		return _formatTripDetails(day);
 	})
@@ -85,7 +85,8 @@ var _formatTripDetails=(trip) =>{
 	return {
 		name:trip.name,
 		dates:trip.dates,
-		days:days
+		days:days,
+		accomodation:trip.accomodation
 	}
 }
 
