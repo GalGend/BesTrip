@@ -44,10 +44,6 @@ var getTripDayByIndex = function(req,res){
 }
 
 var createNewTrip = function(req, res){
-	// This function get all the params for the trip,
-	// saves them on the db, then sends the params to the
-	// trip planner- that return a trip plan -
-	// then saves the trip plan to the db
 
 	try{
 		var newTripPerfences = getValidNewTripParams(req.body);
@@ -81,8 +77,8 @@ var getValidNewTripParams =(params)=>{
 	var fromDate = params.fromDate;
 	var toDate = params.toDate;
 	var destination = params.destination;
-	var sites = params.sites;
-	var transport = params.transport;
+	var sites = params.sites.split(';')
+	var transport = params.transport.split(';')
 	var accomodationPlaceId = params.accomodationPlaceId;
 	var userId = params.userId;
 

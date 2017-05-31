@@ -58,7 +58,6 @@ let searchSitesByQuery=(query, address)=>{
 let getAllSiteCategories = function(){
 	return SiteCategory.find({});
 }
-
 let _getCategoryById = function(categoryIds){
 	var pr = new Promise((resolve, reject)=>{
 		SiteCategory.find()
@@ -88,6 +87,13 @@ var getCitiesAutoComplete = function(searcText){
 		console.log("Error performing autocomplete request to google "+err);
 		throw "Error performing autocomplete request to google "+err;
 	})
+}
+
+var getDirections = function(firstSite, secondSite){
+	// Need to get the possible directions from google maps
+//getDirections	GooglePlaces.
+//GooglePlaces.
+	var i = 1;
 }
 
 var _generateCityAutocompleteRequest = function(searcText){
@@ -213,5 +219,6 @@ module.exports={
 	getCitySitesByCategory:getCitySitesByCategory,
 	getSiteById:getSiteDataById,
 	getHotelAutocomplete:getHotelAutocomplete,
-	getSitesDataByIds:getSitesDataByIds
+	getSitesDataByIds:getSitesDataByIds,
+	getDirections:getDirections
 }
