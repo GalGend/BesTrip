@@ -15,7 +15,7 @@ var TripTransport = require('./models/tripTransport');
 // It recieves the user perfences .
 function TripPlanner (tripDates, accomodation, selectedSites){
     this.tripDates = tripDates;
-    this.tripLength = 4/* tripDates.endDate - tripDates.startDate; */
+    this.tripLength = Math.round((tripDates.to - tripDates.from) /60 /60 / 24 /1000) + 1
 
     this.accomodation = accomodation;
     this.sites = selectedSites;

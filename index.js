@@ -8,7 +8,7 @@ var sites = ['4ac518ebf964a52048ac20e3','4bad16def964a520792c3be3', '4ac518d4f96
 var accomodation={};
 var tripDays = {
     from: new Date(2017, 02, 02),
-    to: new Date(2017, 03, 03)
+    to: new Date(2017, 02, 03)
 }
 var travelMethods = ['car', 'walk'];
 
@@ -28,6 +28,6 @@ var res = {
     }}
 }
 //TripController.createNewTrip(req, res);
-LocationService.getDirections();
-//TripService.planTrip(accomodation, sites, tripDays, travelMethods)
+//LocationService.getDirections();
+TripService.planTrip(accomodation, sites, tripDays, travelMethods)
 
