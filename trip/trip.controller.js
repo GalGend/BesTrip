@@ -76,14 +76,14 @@ var getValidNewTripParams =(params)=>{
 
 	var fromDate = params.fromDate;
 	var toDate = params.toDate;
-	var destination = params.destination;
+	var cityId = params.cityId;
 	var sites = params.sites.split(';')
 	var transport = params.transport.split(';')
 	var accomodationPlaceId = params.accomodationPlaceId;
 	var userId = params.userId;
 
 	// Checking that all params exist and valid
-	if (fromDate===undefined || toDate===undefined || destination===undefined
+	if (fromDate===undefined || toDate===undefined || cityId===undefined
 	|| sites===undefined || sites.length === undefined || transport=== undefined
 	|| transport.length===undefined|| accomodationPlaceId===undefined || userId===undefined)
 
@@ -91,7 +91,7 @@ var getValidNewTripParams =(params)=>{
 
 		// stimulating new trip
 	var trip = {
-		name:"My Trip To "+ destination,
+		cityId:cityId,
 		dates : {
 			from: new Date(fromDate),
 			to: new Date(toDate)

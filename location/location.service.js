@@ -220,5 +220,6 @@ module.exports={
 	getSiteById:getSiteDataById,
 	getHotelAutocomplete:getHotelAutocomplete,
 	getSitesDataByIds:getSitesDataByIds,
-	getDirections:getDirections
+	getDirections:getDirections, 
+	getCityDataById:_getSiteDataById
 }
