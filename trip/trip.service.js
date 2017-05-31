@@ -23,28 +23,32 @@ return Trip.find({_id:dbAccess.tools.getIdObject(tripId),
 
 var saveNewTrip = function(tripObj){
 	var promise = new Promise(function(resolve, reject){
-		var trip  = new Trip({name:tripObj.name,
-			user: tripObj.user,
-			dates:tripObj.dates, 
-			accomodation:{
-				accomodationPlaceId:tripObj.accomodationPlaceId
-			}, 
-			tripPlan:{}
-		})
+		locationService.getCityDataById(tripObj.cityId)
+		.then(function(data){
+			var trip  = new Trip({
+				name:"My Trip To "+data.result.formatted_address, 
+				user: tripObj.user,
+				dates:tripObj.dates, 
+				accomodation:{
+					accomodationPlaceId:tripObj.accomodationPlaceId
+				}, 
+				tripPlan:{}
+			})
 
-		// Getting all the missing params:
-		// Data for the accomodation
-		locationService.getSiteById(tripObj.accomodationPlaceId)
-		.then((hotelSite)=>{
-			// Setting the accomodation on the new trip
-			trip.accomodation.accomodationLocation = hotelSite.location,
-			trip.accomodation.accomodationName  = hotelSite.name
-			planTrip(trip._doc.accomodation, tripObj.sites, tripObj.dates)
-			.then(function(tripPlan){
-				trip.tripPlan.days=[];
-				trip.tripPlan.days = tripPlan.days;
-				trip.save().then((data)=>{
-					resolve({tripId:data._doc._id})
+			// Getting all the missing params:
+			// Data for the accomodation
+			locationService.getSiteById(tripObj.accomodationPlaceId)
+			.then((hotelSite)=>{
+				// Setting the accomodation on the new trip
+				trip.accomodation.accomodationLocation = hotelSite.location,
+				trip.accomodation.accomodationName  = hotelSite.name
+				planTrip(trip._doc.accomodation, tripObj.sites, tripObj.dates)
+				.then(function(tripPlan){
+					trip.tripPlan.days=[];
+					trip.tripPlan.days = tripPlan.days;
+					trip.save().then((data)=>{
+						resolve({tripId:data._doc._id})
+					})
 				})
 			})
 		})
