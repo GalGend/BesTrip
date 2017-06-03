@@ -5,11 +5,11 @@ var getTripById = function(req, res){
     try{
 		var tripId = req.params.tripId;
 		if ((tripId===undefined)){
-			baseController.handleBadRequestError("Get trip by id bad params")
+			baseController.handleBadRequestError(res, "Get trip by id bad params")
 		}
 	}
 	catch(err){
-		baseController.handleBadRequestError("Get trip by id bad params")
+		baseController.handleBadRequestError(res, "Get trip by id bad params")
 	}
 	try{
 		tripService.getTripById(tripId)
@@ -26,11 +26,11 @@ var getTripDayByIndex = function(req,res){
 		var tripId = req.params.tripId;
         var dayIndex=req.params.dayIndex
 		if ((tripId===undefined|| dayIndex===undefined)){
-			baseController.handleBadRequestError("Get trip day by id bad params")
+			baseController.handleBadRequestError(res, "Get trip day by id bad params")
 		}
 	}
 	catch(err){
-		baseController.handleBadRequestError("Get trip day by id bad params")
+		baseController.handleBadRequestError(res, "Get trip day by id bad params")
 	}
 	try{
 		tripService.getTripDayByIndex(tripId, dayIndex)
@@ -48,11 +48,11 @@ var createNewTrip = function(req, res){
 	try{
 		var newTripPerfences = getValidNewTripParams(req.body);
 		if (newTripPerfences===undefined){
-			baseController.handleBadRequestError("New Trip bad params")
+			baseController.handleBadRequestError(res, "New Trip bad params")
 		}
 	}
 	catch(err){
-		baseController.handleBadRequestError("New Trip bad params")
+		baseController.handleBadRequestError(res, "New Trip bad params")
 	}
 	try{
 		tripService.saveNewTrip(newTripPerfences)
