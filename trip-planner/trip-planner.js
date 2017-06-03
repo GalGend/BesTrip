@@ -49,11 +49,13 @@ function TripPlanner (tripDates, accomodation, selectedSites){
                     for (var siteIdx =0; siteIdx<daySites.length; siteIdx++){
                         // creating new trip site
                         var site= self.sites[daySites[siteIdx]];
-                        var tripSite = new TripSite(siteIdx, site.siteName, site.siteId, site.location )
+                        var tripSite = new TripSite(siteIdx+1, site.siteName, site.siteId, site.location )
                         tripSites[siteIdx] = tripSite;
                     //  console.log('- Site %d',siteIdx,  self.sites[daySites[siteIdx]].siteName)
-                    }
-                    var tripDay = new TripDay(day, self.tripDates.from, tripSites, []/* TODO: should be the transport */)
+                }
+                    // calculating the right date
+                    var date = new Date( self.tripDates.from.getTime()+ (day*60*60*24*1000))
+                    var tripDay = new TripDay(day+1, date, tripSites, []/* TODO: should be the transport */)
                     tripDays[day] = tripDay;
                 }
 

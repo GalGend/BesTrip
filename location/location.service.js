@@ -182,7 +182,7 @@ let _mapFoursquaresite = (site)=>{
 		rating:site.rating,
 		description:site.description,
 		photos:photos,
-		location:[site.location.lat,site.location.lng]
+		location:[site.location.lat,site.location.lng],
 	}
 }
 
@@ -207,7 +207,6 @@ var getHotelAutocomplete = function(searcText, cityId){
 
 		return promise;
 	})
-	
 }
 
 let _mapHotel = (hotelData)=>{
@@ -222,15 +221,23 @@ var getDistanceMatrix = function(origins, destinations, mode){
 		var query = {
 	 		origins:origins,
 	 		destinations:destinations,
-	 		mode:mode
+	 		//mode:mode
 	 	}
 		 googleMapsClient.distanceMatrix(query, (err, data)=>{
-			 console.log(data);
-
-			 // Need to transform the data
+			 // Need to loop on all the distances
+			 if(err)
+			 	reject("Error Getting Distance Matrix From Google Maps API")
+			 var totalDistances= [];
+			 _.each(data.json.rows, (currentDistances)=>{
+				list = [];
+				_.each(currentDistances.elements,(elem)=>{
+					list.push(elem.duration.value)
+				}) 
+				totalDistances.push(list);
+			 })
+			 resolve(totalDistances);
 		 })
 	})
-	
 }
 
 module.exports={
