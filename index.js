@@ -44,3 +44,4 @@ var res = {
 //LocationService.getDirections();
 TripService.planTrip(accomodation, sites, tripDays, travelMethods)
 
+//LocationService.getDistanceMatrix(_)

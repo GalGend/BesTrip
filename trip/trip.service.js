@@ -67,6 +67,7 @@ var planTrip=function(accomodation, siteIds, dates){
 
 	return sites.then((sites)=>{
 		var onlyLocations = _.pluck(sites, 'location');
+		locationService.getDistanceMatrix([onlyLocations[0], onlyLocations[1]], onlyLocations)
 		var tripPlanner = new TripPlanner(dates, accomodation, _.map(sites, _formatSitesForPlanner));
 		return tripPlanner.plan()
 	})
