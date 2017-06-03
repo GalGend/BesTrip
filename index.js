@@ -40,8 +40,8 @@ var res = {
         json:()=>{}
     }}
 }
-//TripController.createNewTrip(req, res);
+TripController.createNewTrip(req, res);
 //LocationService.getDirections();
-TripService.planTrip(accomodation, sites, tripDays, travelMethods)
+//TripService.planTrip(accomodation, sites, tripDays, travelMethods)
 
 //LocationService.getDistanceMatrix(_)

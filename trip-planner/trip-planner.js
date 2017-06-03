@@ -49,7 +49,7 @@ function TripPlanner (tripDates, accomodation, selectedSites){
                     for (var siteIdx =0; siteIdx<daySites.length; siteIdx++){
                         // creating new trip site
                         var site= self.sites[daySites[siteIdx]];
-                        var tripSite = new TripSite(siteIdx, site.siteName, site.siteId, site.location )
+                        var tripSite = new TripSite(siteIdx+1, site.siteName, site.siteId, site.location )
                         tripSites[siteIdx] = tripSite;
                     //  console.log('- Site %d',siteIdx,  self.sites[daySites[siteIdx]].siteName)
                 }
