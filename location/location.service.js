@@ -6,6 +6,9 @@ var SiteCategory = dbAccess.models.siteCategory;
 
 var GooglePlaces = require('google-places');
 var places = new GooglePlaces(process.env.GGL_API_KEY)
+var googleMapsClient = require('@google/maps').createClient({
+  key: process.env.GGL_API_KEY
+})
 var foursquare = Promise.promisifyAll(require('node-foursquare-venues')(process.env.FRSQR_CLIENT_ID, process.env.FRSQR_CLIENT_SCRT))
 
 var util = require('util');
@@ -213,6 +216,23 @@ let _mapHotel = (hotelData)=>{
 		name:hotelData.name
 	}
 }
+var getDistanceMatrix = function(origins, destinations, mode){
+
+	return new Promise((resolve, reject)=>{
+		var query = {
+	 		origins:origins,
+	 		destinations:destinations,
+	 		mode:mode
+	 	}
+		 googleMapsClient.distanceMatrix(query, (err, data)=>{
+			 console.log(data);
+
+			 // Need to transform the data
+		 })
+	})
+	
+}
+
 module.exports={
 	getCitiesAutoComplete:getCitiesAutoComplete,
 	getAllSiteCategories:getAllSiteCategories,
@@ -221,5 +241,6 @@ module.exports={
 	getHotelAutocomplete:getHotelAutocomplete,
 	getSitesDataByIds:getSitesDataByIds,
 	getDirections:getDirections, 
-	getCityDataById:_getSiteDataById
+	getCityDataById:_getSiteDataById,
+	getDistanceMatrix:getDistanceMatrix
 }

@@ -3,6 +3,11 @@ var Trip = dbAccess.models.trip;
 var Promise = require('bluebird');
 var locationService = require('../location/location.service')
 var TripPlanner = require('../trip-planner/trip-planner')
+var _ = require('underscore')
+var lodash = require('lodash')
+var googleMapsClient = require('@google/maps').createClient({
+  key: process.env.GGL_API_KEY
+})
 
 var getTripById=function(mongoId){
     return Trip.findById(mongoId, {name:1, 
@@ -59,14 +64,16 @@ var saveNewTrip = function(tripObj){
 
 var planTrip=function(accomodation, siteIds, dates){
 	var sites = locationService.getSitesDataByIds(siteIds);
+
 	return sites.then((sites)=>{
+		var onlyLocations = _.pluck(sites, 'location');
 		var tripPlanner = new TripPlanner(dates, accomodation, _.map(sites, _formatSitesForPlanner));
 		return tripPlanner.plan()
 	})
 }
 
 var getTripsByUser = function(userId){
-	return Trip.find({user:userId}, {_id:1, name:1})
+	return Trip.find({user:userId}, {_id:1, name:1, dates:1})
 }
 
 var _formatTripDetails=(trip) =>{
