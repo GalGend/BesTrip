@@ -34,12 +34,24 @@ var getUserTrips = function(req, res){
 var _validateNewUserParms = function(obj){
     return (obj.userName!= undefined && obj.fbId!=undefined)
 }
+var loginUser = function(req, res){
+    // Need to check that the user exist
+     var userName = req.body.userName;
+    if(typeof userName === undefined)
+        baseController.handleBadRequestError('User Name not found in request'); 
+
+    userService.getUserDetails(userName)
+    .then(baseController.createDataHandler(res))
+    .catch(baseController.createErrorHandler(res, "Login user error"))
+}
+
 
 
 
 module.exports={
     getUserById:getUserById,
     addNewUser:addNewUser, 
-    getUserTrips:getUserTrips
+    getUserTrips:getUserTrips,
+    loginUser:loginUser
 
 }

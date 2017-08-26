@@ -18,6 +18,16 @@ var getUserById=function(mongoId){
     // });
 }
 
+var getUserDetails = function(userName){
+   return User.find({name:userName}, {_id:1, name:1})
+            .then(function(data){
+                if(data[0])
+                     return data[0];
+                else
+                    return saveNewUser(userName, "unknown")
+            })
+}
+
 var saveNewUser=function(userName, fbId){
 
     var us = new User({
@@ -38,5 +48,6 @@ var getUserByFBId = function(fbId){
 
 module.exports={
     getUserById:getUserById,
-    saveNewUser:saveNewUser
+    saveNewUser:saveNewUser,
+    getUserDetails:getUserDetails
 }
