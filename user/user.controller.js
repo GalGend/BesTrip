@@ -44,9 +44,7 @@ var loginUser = function(req, res){
     .then(baseController.createDataHandler(res))
     .catch(baseController.createErrorHandler(res, "Login user error"))
 }
-var _validateNewUserParms = function(obj){
-    return (obj.userName!= undefined && obj.fbId!=undefined)
-}
+
 
 
 
