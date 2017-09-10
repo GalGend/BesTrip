@@ -5,15 +5,34 @@ Lodash = require('lodash');
 
 function BOTGenetic(firstGeneration, sites){
 
-    this._firstGen = firstGeneration;
+    _firstGen = firstGeneration;
     this.sites = sites;
 
     this._getRandomSolution = function(callback){
-        // shuffles the sites, returns a list of days (returns the k means)
-        var generation = {
-            days:this._firstGen
+
+        // taking the first gen and changing it a little bit
+
+        var ranDays = Lodash.clone(_firstGen);
+        
+        // random day index to mutate
+        var randomDayIndex = Math.round(Math.random(0, ranDays.length));
+        var randomSiteIndex = Math.round(Math.random(0, ranDays[randomDayIndex].length));
+
+        // Checking the site index 
+        var siteId = ranDays[randomDayIndex][randomSiteIndex];
+
+        // rejecting it from the array
+        delete ranDays[randomDayIndex][randomSiteIndex];
+
+        var toRandomDayIndex = Math.round(Math.random(0, ranDays.length));
+        ranDays[toRandomDayIndex].push(siteId);
+
+        var newSolution = {
+            days:ranDays
         }
-        callback(generation);
+        // shuffles the sites, returns a list of days (returns the k means)
+       
+        callback(newSolution);
     }
 
     this._fitness = function(solution, callback){
@@ -61,7 +80,7 @@ function BOTGenetic(firstGeneration, sites){
     this.optimize=function(firstGen, callbacl){
 
       
-        this._firstGen = firstGen;
+        _firstGen = firstGen;
 
             options = { getRandomSolution : this._getRandomSolution  // previously described to produce random solution
                 , popSize : 500  // population size
