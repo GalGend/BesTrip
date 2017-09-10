@@ -2,7 +2,10 @@
 Lodash = require('lodash');
 _ = require('underscore');
 BOTLinearPartitioning = require('./bot-models/botLinearPartitioning')
+BOTGenetic =require('./bot-models/botGenetic')
 BOTKMeans = require('./bot-models/botKmeans')
+//BOTGenetic = require('./bot-models/botGenetic')
+//BOTGenetic = require('./bot-models/botGenetic')
 Promise = require('bluebird')
 
 function BOT(botSites, botDistabceTable, numberOfDays){
@@ -12,6 +15,7 @@ function BOT(botSites, botDistabceTable, numberOfDays){
     this._distanceTable = botDistabceTable;
     this._botLinearPartitioning;
     this._botKMeans ;
+    this._botGenetic;
 
     this.optimize = function(){
         var promise = new Promise((resolve, reject)=>{
@@ -22,8 +26,9 @@ function BOT(botSites, botDistabceTable, numberOfDays){
         //   var firstPar = this._botLinearPartitioning.partition();
         //    console.log(firstPar);
 
+            // Creating the first generation of trip plan options
             this._botKMeans = new BOTKMeans(this._sites, this.numberOfDays);
-
+            this._botGenetic = new BOTGenetic(undefined, this._sites);
             // Now we performing the k means
             this._botKMeans.clusterize().then((cluster)=>{
 
@@ -38,6 +43,15 @@ function BOT(botSites, botDistabceTable, numberOfDays){
                     }
                     daysSites[day] = sites;
                 }
+
+                
+                // Optimizing using bot genetic, sending a callback function to handle
+                // the result
+                this._botGenetic.optimize(daysSites, function(bestTrip){
+                    
+                    // Here needs to resolve the solution
+                    //resolve(besTrip);
+                })
                 // Priniting the 
                 resolve(daysSites);
             })

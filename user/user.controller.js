@@ -46,8 +46,6 @@ var loginUser = function(req, res){
 }
 
 
-
-
 module.exports={
     getUserById:getUserById,
     addNewUser:addNewUser, 
