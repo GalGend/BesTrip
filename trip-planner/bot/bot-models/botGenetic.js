@@ -13,6 +13,8 @@ function BOTGenetic(firstGeneration, sites){
         // taking the first gen and changing it a little bit
         var ranDays = Lodash.clone(_firstGen);
         
+        // Hellop this is a change
+        var i=1;
         // random day index to mutate
         var randomDayIndex = Math.round(Math.random(0, ranDays.length));
         var randomSiteIndex = Math.round(Math.random(0, ranDays[randomDayIndex].length));
