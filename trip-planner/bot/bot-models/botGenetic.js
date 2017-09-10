@@ -11,7 +11,6 @@ function BOTGenetic(firstGeneration, sites){
     this._getRandomSolution = function(callback){
 
         // taking the first gen and changing it a little bit
-
         var ranDays = Lodash.clone(_firstGen);
         
         // random day index to mutate
@@ -97,12 +96,6 @@ function BOTGenetic(firstGeneration, sites){
               , taskInstance = new Task(options)
 
               taskInstance.run(function (stats) { console.log('results', stats)})
-
-            let vectors = new Array();
-           
-    
-
-           
     }
 }
 
