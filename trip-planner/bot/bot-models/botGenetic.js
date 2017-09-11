@@ -13,8 +13,6 @@ function BOTGenetic(firstGeneration, sites){
         // taking the first gen and changing it a little bit
         var ranDays = Lodash.clone(_firstGen);
         
-        // Hellop this is a change
-        var i=1;
         // random day index to mutate
         var randomDayIndex = Math.round(Math.random(0, ranDays.length));
         var randomSiteIndex = Math.round(Math.random(0, ranDays[randomDayIndex].length));
@@ -26,11 +24,16 @@ function BOTGenetic(firstGeneration, sites){
         delete ranDays[randomDayIndex][randomSiteIndex];
 
         var toRandomDayIndex = Math.round(Math.random(0, ranDays.length));
-        ranDays[toRandomDayIndex].push(siteId);
+        
+        if (typeof siteId !== 'undefined')
+        {
+            ranDays[toRandomDayIndex].push(siteId);
+        }
 
         var newSolution = {
             days:ranDays
         }
+
         // shuffles the sites, returns a list of days (returns the k means)
        
         callback(newSolution);
@@ -60,16 +63,36 @@ function BOTGenetic(firstGeneration, sites){
         }
     }
     this._mutate = function(solution, callback){
+        var b = 1;
          //selecting from the most used day the closest site to the shortest day selecting the much spent days and gives it to the lest
 
          // Selecting the most used day, and the least used day
 
          // Checking the closest site from max that is closest to the centerpoint of min
          //mutating only these two days
+         callback (solution);
     }
 
     this._crossover = function(solutionA, solutionB, callback){
 
+        var crossSolution = Lodash.clone(solutionA);
+        for (day in crossSolution.days)
+        {
+            var currentIndex =  crossSolution.days[day].length, temporaryValue, randomIndex;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                // And swap it with the current element.
+                temporaryValue = crossSolution.days[day][currentIndex];
+                crossSolution.days[day][currentIndex] = crossSolution.days[day][randomIndex];
+                crossSolution.days[day][randomIndex] = temporaryValue;
+            }
+        }
+        callback (crossSolution);
     }
 
     this._stopCriteria = function(){
