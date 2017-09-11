@@ -62,15 +62,45 @@ function BOTGenetic(firstGeneration, sites){
             sum+=site.siteLength;
         }
     }
-    this._mutate = function(solution, callback){
-        var b = 1;
+    this._mutate = function(solution, callback){        
          //selecting from the most used day the closest site to the shortest day selecting the much spent days and gives it to the lest
 
          // Selecting the most used day, and the least used day
 
          // Checking the closest site from max that is closest to the centerpoint of min
          //mutating only these two days
-         callback (solution);
+         for (day in solution.days)
+         {
+            var currentIndex =  solution.days[day].length;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+                currentIndex -= 1;
+                if (typeof solution.days[day][currentIndex] === 'undefined')
+                {
+                    solution.days[day].splice(currentIndex, 1)
+                }
+            }
+         }
+
+        for (day in solution.days)
+        {
+            var currentIndex =  solution.days[day].length, temporaryValue, randomIndex, randomIndex2;
+
+            // Pick a random day to move the last site
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            randomIndex2 = Math.floor(Math.random() * (currentIndex - randomIndex + 1)) + 1;
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = solution.days[day][currentIndex];
+            if (typeof temporaryValue !== 'undefined')
+            {
+                solution.days[day].splice(currentIndex, 1)
+                solution.days[randomIndex].splice(randomIndex2,0,temporaryValue)
+            }
+        }
+        callback (solution);
     }
 
     this._crossover = function(solutionA, solutionB, callback){
@@ -78,7 +108,7 @@ function BOTGenetic(firstGeneration, sites){
         var crossSolution = Lodash.clone(solutionA);
         for (day in crossSolution.days)
         {
-            var currentIndex =  crossSolution.days[day].length, temporaryValue, randomIndex;
+            var currentIndex =  solutionB.days[day].length, temporaryValue, randomIndex;
 
             // While there remain elements to shuffle...
             while (0 !== currentIndex) {
