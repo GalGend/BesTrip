@@ -14,21 +14,22 @@ function BOTGenetic(firstGeneration, sites){
         var ranDays = Lodash.clone(_firstGen);
         
         // random day index to mutate
-        var randomDayIndex = Math.round(Math.random(0, ranDays.length));
-        var randomSiteIndex = Math.round(Math.random(0, ranDays[randomDayIndex].length));
+        var randomDayIndex = Math.floor(Math.random() * ranDays.length  );
+        var randomSiteIndex = Math.floor(Math.random() * ranDays[randomDayIndex].length  );
 
         // Checking the site index 
         var siteId = ranDays[randomDayIndex][randomSiteIndex];
 
         // rejecting it from the array
-        delete ranDays[randomDayIndex][randomSiteIndex];
+        //delete ranDays[randomDayIndex][randomSiteIndex];
 
-        var toRandomDayIndex = Math.round(Math.random(0, ranDays.length));
+        var toRandomDayIndex = Math.floor(Math.random()* ranDays.length);
         
-        if (typeof siteId !== 'undefined')
-        {
-            ranDays[toRandomDayIndex].push(siteId);
-        }
+
+        ranDays[toRandomDayIndex].push(siteId);
+        var toChangeIndex = ranDays[randomDayIndex][ranDays[randomDayIndex].length-1];
+        ranDays[randomDayIndex][randomSiteIndex] = toChangeIndex;
+        delete ranDays[randomDayIndex][ranDays[randomDayIndex].length-1];
 
         var newSolution = {
             days:ranDays
