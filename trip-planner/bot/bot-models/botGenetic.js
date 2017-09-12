@@ -15,7 +15,7 @@ function BOTGenetic(sites, tripFitnessFunc){
         // taking the first gen and changing it a little bit
         var ranDays = Lodash.cloneDeep(_firstGen);
        // console.log("doing getting random solution")
-        for(var i=0; i<1; i++){
+        for(var i=0; i<4; i++){
             // random day index to mutate
             var randomDayIndex = Math.floor(Math.random() * ranDays.length  );
             var randomSiteIndex = Math.floor(Math.random() * ranDays[randomDayIndex].length  );
