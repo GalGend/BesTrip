@@ -15,6 +15,9 @@ function BOT(botSites, botDistabceTable, numberOfDays){
     this._botKMeans ;
     this._botGenetic;
 
+    
+     
+
     this.optimize = function(){
         var promise = new Promise((resolve, reject)=>{
             // Need to calculate best partioning
@@ -23,13 +26,13 @@ function BOT(botSites, botDistabceTable, numberOfDays){
         // this._botLinearPartitioning = new BOTLinearPartitioning(sitesLengths, this.numberOfDays);
         //   var firstPar = this._botLinearPartitioning.partition();
         //    console.log(firstPar);
-
+            
             // Creating the first generation of trip plan options
             this._botKMeans = new BOTKMeans(this._sites, this.numberOfDays);
-            this._botGenetic = new BOTGenetic(undefined, this._sites);
+            this._botGenetic = new BOTGenetic(this._sites);
             // Now we performing the k means
             this._botKMeans.clusterize().then((cluster)=>{
-
+            self = this;
                 // The bot should return the array of the days
                 var daysSites=[];
                 for (var day =0 ; day<cluster.length; day++){
@@ -42,10 +45,9 @@ function BOT(botSites, botDistabceTable, numberOfDays){
                     daysSites[day] = sites;
                 }
 
-                
                 // Optimizing using bot genetic, sending a callback function to handle
                 // the result
-                this._botGenetic.optimize(daysSites, function(besTrip){
+                this._botGenetic.optimize(daysSites, self.calculateTripScore, function(besTrip){
                     
                     var i=1;
                     // Here needs to resolve the solution
@@ -62,5 +64,44 @@ function BOT(botSites, botDistabceTable, numberOfDays){
         return promise;
     }
 
+
+
+    this._calculateDayWeight=function(day){
+        
+        var hotelIdSiteId=9;
+        var dayWeight = 0;
+
+        for(siteIdx in day){
+            dayWeight+=90;
+            var distanceFromSite = 0;
+
+            if(siteIdx ==0 || siteIdx ==day.length -1)
+                // Needs to send the id for the hotel because the user comes 
+                // from the hotel
+                distanceFromSite = self._getDistanceBetweenTwoSites(hotelIdSiteId, day[siteIdx])
+            else
+                distanceFromSite = self._getDistanceBetweenTwoSites(day[siteIdx], day[siteIdx+1])
+
+            dayWeight+=90+ distanceFromSite;  
+        }
+
+        return dayWeight;
+    }
+
+    this.calculateTripScore = function(tripSolution){
+        var daysScores =[];
+        for(day in tripSolution.days){
+            daysScores.push(self._calculateDayWeight(tripSolution.days[day]))
+        }
+
+        // Needs to calculate the score of the trip
+        return 1000-(Lodash.max(daysScores) - Lodash.min(daysScores));
+
+    }
+
+    this._getDistanceBetweenTwoSites=function(siteOne, siteTwo){
+        return 20;
+    }
 }
+    
 module.exports = BOT;
