@@ -15,8 +15,8 @@
                 "GGL_CITIES_API_ADDR":"https://maps.googleapis.com/maps/api/place/autocomplete/json",
                 "MONGO_CONN_STR":"mongodb://admin:admin@ds137530.mlab.com:37530/bestrip",
                 "GGL_SITES_API_ADDR":"https://maps.googleapis.com/maps/api/place/details/json",
-                "FRSQR_CLIENT_ID":"HWDRIRERF4UBSHJG3FO11WAA5DF15VQ0KBGOBFOVZ01SBXTT",
-                "FRSQR_CLIENT_SCRT":"0KP5G3NBDUKQJ1JWSLHVWYVE4YYYDQPOXJSZ3X1KW2RDXXQL"
+                "FRSQR_CLIENT_ID":"OQKKMIPANTPQWECTXCW4FZYETIH4JTWIJSHJAI4LFKPAQJBV",
+                "FRSQR_CLIENT_SCRT":"KJZYLR0N0V34I010NKG1DLIKDAI0ANFPXSBFYIVIFNUFRJTH"
             }
        }
         // {
