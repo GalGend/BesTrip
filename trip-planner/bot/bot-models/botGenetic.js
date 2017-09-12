@@ -4,17 +4,18 @@ Promise = require('bluebird');
 Lodash = require('lodash');
 EventEmitter = require('events').EventEmitter
 
-function BOTGenetic(firstGeneration, sites){
+function BOTGenetic(sites, tripFitnessFunc){
 
-    _firstGen = firstGeneration;
+    _firstGen = {} /*= firstGeneration;*/
+    _tripFitnessFunc ={};
     this.sites = sites;
 
     this._getRandomSolution = function(callback){
 
         // taking the first gen and changing it a little bit
-        var ranDays = Lodash.clone(_firstGen);
+        var ranDays = Lodash.cloneDeep(_firstGen);
        // console.log("doing getting random solution")
-        for(var i=0; i<4; i++){
+        for(var i=0; i<1; i++){
             // random day index to mutate
             var randomDayIndex = Math.floor(Math.random() * ranDays.length  );
             var randomSiteIndex = Math.floor(Math.random() * ranDays[randomDayIndex].length  );
@@ -23,7 +24,7 @@ function BOTGenetic(firstGeneration, sites){
             var siteId = ranDays[randomDayIndex][randomSiteIndex];
 
             // rejecting it from the array
-            //delete ranDays[randomDayIndex][randomSiteIndex];
+            //delete ranDays[randomDayIndex][srandomSiteIndex];
 
             var toRandomDayIndex = Math.floor(Math.random()* ranDays.length);
             
@@ -36,26 +37,26 @@ function BOTGenetic(firstGeneration, sites){
         var newSolution = {
             days:ranDays
         }
-
-        // shuffles the sites, returns a list of days (returns the k means)
        
-        callback(newSolution);
+        callback(Lodash.cloneDeep(newSolution));
     }
 
     this._fitness = function(solution, callback){
         // Return the average of the of the day spent, or the highest max day minus the smallest
         // Should return a number (I dont know if should me maximized or minimized)
-        var daysLength = [];
-        // Running over each day
+        // var daysLength = [];
+        // // Running over each day
 
-        for (day in solution.days){
-            // daysLength[day] = this._calculateDayLength(day.sites)
-            daysLength[day] = Lodash.compact(solution.days[day]).length;
-        }
+        // for (day in solution.days){
+        //     // daysLength[day] = this._calculateDayLength(day.sites)
+        //     daysLength[day] = Lodash.compact(solution.days[day]).length;
+        // }
 
-        // or calculating the average... shold decide
-        var fitnessValue = 100-(Lodash.max(daysLength) - Lodash.min(daysLength));
-        console.log('fitness of '+fitnessValue )
+        // // or calculating the average... shold decide
+        // var minDayLength = Lodash.min(daysLength);
+        // var fitnessValue = (100-(Lodash.max(daysLength) - minDayLength))* (minDayLength!=0);
+        var fitnessValue = _tripFitnessFunc(_deepCompact(solution));
+         console.log('fitness of '+fitnessValue )
         callback (fitnessValue);
     }
 
@@ -109,7 +110,7 @@ function BOTGenetic(firstGeneration, sites){
 
     this._crossover = function(solutionA, solutionB, callback){
 
-        var crossSolution = Lodash.clone(solutionA);
+        var crossSolution = Lodash.cloneDeep(solutionA);
         for (day in crossSolution.days)
         {
             var currentIndex =  solutionB.days[day].length, temporaryValue, randomIndex;
@@ -133,16 +134,19 @@ function BOTGenetic(firstGeneration, sites){
         // Needs to set a cri
 
        // return this._fitness(solution)>90;
-       return  Math.floor(Math.random() * 100) == 90;
+       //return  Math.floor(Math.random() * 100) == 90;
+       //return this.statistics.maxScore >98;
+       return this.generation ==3;
     }
     // Maybe this function will generate more complex partiotion such as mixing 
     // Some sites together based on their closety 
-    this.optimize=function(firstGen, btcallback){
+    this.optimize=function(firstGen, tripFitFunc,btcallback){
 
       
         _firstGen = firstGen;
+        _tripFitnessFunc = tripFitFunc;
 
-            options = { getRandomSolution : this._getRandomSolution  // previously described to produce random solution
+        options = { getRandomSolution : this._getRandomSolution  // previously described to produce random solution
                 , popSize : 500  // population size
                 , stopCriteria : this._stopCriteria  // previously described to act as stopping criteria for entire process
                 , fitness : this._fitness  // previously described to measure how good your solution is
@@ -168,6 +172,14 @@ function BOTGenetic(firstGeneration, sites){
                   //EventEmitter.on('run finished', cb())
             })
     }
+}
+
+_deepCompact = function(solution){
+    for (day in solution.days) {
+        solution.days[day] = Lodash.compact(solution.days[day])
+    }
+
+    return solution;
 }
 
 module.exports = BOTGenetic;
