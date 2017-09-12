@@ -69,7 +69,9 @@ var planTrip=function(accomodation, siteIds, dates){
 		var onlyLocations = _.pluck(sites, 'location');
 	//	locationService.getDistanceMatrix([onlyLocations[0], onlyLocations[1]], onlyLocations)
 		var tripPlanner = new TripPlanner(dates, accomodation, _.map(sites, _formatSitesForPlanner));
-		return tripPlanner.plan()
+		// Sending the distnace calculation function as a parameter
+		return tripPlanner.plan(locationService.getDistanceMatrix)
+		//return tripPlanner.plan(function(){})
 	})
 }
 
