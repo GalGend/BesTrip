@@ -52,6 +52,7 @@ var saveNewTrip = function(tripObj){
 					trip.tripPlan.days=[];
 					trip.tripPlan.days = tripPlan.days;
 					trip.save().then((data)=>{
+						console.log('New trip created :'+ data._doc._id)
 						resolve({tripId:data._doc._id})
 					})
 				})
