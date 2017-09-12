@@ -229,6 +229,7 @@ var getDistanceMatrix = function(origins, destinations, mode){
 			 	console.log('Error from google matrix api:' + err)
 				 reject("Error Getting Distance Matrix From Google Maps API")
 			}
+			
 			 var totalDistances= [];
 			 _.each(data.json.rows, (currentDistances)=>{
 				list = [];
