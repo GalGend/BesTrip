@@ -4,8 +4,6 @@ _ = require('underscore');
 BOTLinearPartitioning = require('./bot-models/botLinearPartitioning')
 BOTGenetic =require('./bot-models/botGenetic')
 BOTKMeans = require('./bot-models/botKmeans')
-//BOTGenetic = require('./bot-models/botGenetic')
-//BOTGenetic = require('./bot-models/botGenetic')
 Promise = require('bluebird')
 
 function BOT(botSites, botDistabceTable, numberOfDays){
@@ -47,13 +45,14 @@ function BOT(botSites, botDistabceTable, numberOfDays){
                 
                 // Optimizing using bot genetic, sending a callback function to handle
                 // the result
-                this._botGenetic.optimize(daysSites, function(bestTrip){
+                this._botGenetic.optimize(daysSites, function(besTrip){
                     
+                    var i=1;
                     // Here needs to resolve the solution
-                    //resolve(besTrip);
+                    resolve(besTrip);
                 })
                 // Priniting the 
-                resolve(daysSites);
+       //         resolve(daysSites);
             })
             // Now we have the best partiotion- need to optimize the site assiging
             // need to randomly choose sites - then the value of that partition

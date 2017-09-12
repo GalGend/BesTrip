@@ -71,6 +71,7 @@ var planTrip=function(accomodation, siteIds, dates){
 		var tripPlanner = new TripPlanner(dates, accomodation, _.map(sites, _formatSitesForPlanner));
 		// Sending the distnace calculation function as a parameter
 		return tripPlanner.plan(locationService.getDistanceMatrix)
+		//return tripPlanner.plan(function(){})
 	})
 }
 
